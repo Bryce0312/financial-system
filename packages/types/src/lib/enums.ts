@@ -1,0 +1,63 @@
+export enum RoleCode {
+  EMPLOYEE = "EMPLOYEE",
+  ADMIN = "ADMIN"
+}
+
+export enum ExpenseExtensionType {
+  NONE = "NONE",
+  TRAVEL = "TRAVEL",
+  PURCHASE = "PURCHASE"
+}
+
+export enum ExpenseEntryMode {
+  TOTAL = "TOTAL",
+  UNIT_PRICE = "UNIT_PRICE"
+}
+
+export enum ExpenseReportStatus {
+  DRAFT = "DRAFT",
+  SUBMITTED = "SUBMITTED",
+  ARCHIVED = "ARCHIVED"
+}
+
+export enum InvoiceAttachmentStatus {
+  PRESENT = "PRESENT",
+  MISSING_REQUIRED = "MISSING_REQUIRED",
+  DECLARED_BUT_NOT_UPLOADED = "DECLARED_BUT_NOT_UPLOADED",
+  NOT_REQUIRED = "NOT_REQUIRED"
+}
+
+export enum AnomalySeverity {
+  LOW = "LOW",
+  MEDIUM = "MEDIUM",
+  HIGH = "HIGH"
+}
+
+export enum AnomalyType {
+  OVER_LIMIT = "OVER_LIMIT",
+  INVOICE_MISSING_REQUIRED = "INVOICE_MISSING_REQUIRED",
+  INVOICE_DECLARED_BUT_NOT_UPLOADED = "INVOICE_DECLARED_BUT_NOT_UPLOADED",
+  PURCHASE_REQUIRED_FIELD_MISSING = "PURCHASE_REQUIRED_FIELD_MISSING",
+  PURCHASE_AMOUNT_MISMATCH = "PURCHASE_AMOUNT_MISMATCH"
+}
+
+export enum UploadMethod {
+  MANUAL = "MANUAL",
+  IMAGE = "IMAGE",
+  PDF = "PDF",
+  CAMERA = "CAMERA"
+}
+
+export enum ExportJobStatus {
+  PENDING = "PENDING",
+  PROCESSING = "PROCESSING",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED"
+}
+
+export enum TimeBasis {
+  SUBMITTED_AT = "SUBMITTED_AT",
+  EXPENSE_DATE = "EXPENSE_DATE"
+}
+
+

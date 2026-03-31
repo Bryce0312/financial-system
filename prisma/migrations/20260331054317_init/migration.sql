@@ -1,0 +1,306 @@
+-- CreateEnum
+CREATE TYPE "RoleCode" AS ENUM ('EMPLOYEE', 'ADMIN');
+
+-- CreateEnum
+CREATE TYPE "ExpenseExtensionType" AS ENUM ('NONE', 'TRAVEL', 'PURCHASE');
+
+-- CreateEnum
+CREATE TYPE "ExpenseEntryMode" AS ENUM ('TOTAL', 'UNIT_PRICE');
+
+-- CreateEnum
+CREATE TYPE "ExpenseReportStatus" AS ENUM ('DRAFT', 'SUBMITTED', 'ARCHIVED');
+
+-- CreateEnum
+CREATE TYPE "InvoiceAttachmentStatus" AS ENUM ('PRESENT', 'MISSING_REQUIRED', 'DECLARED_BUT_NOT_UPLOADED', 'NOT_REQUIRED');
+
+-- CreateEnum
+CREATE TYPE "AnomalySeverity" AS ENUM ('LOW', 'MEDIUM', 'HIGH');
+
+-- CreateEnum
+CREATE TYPE "AnomalyType" AS ENUM ('OVER_LIMIT', 'INVOICE_MISSING_REQUIRED', 'INVOICE_DECLARED_BUT_NOT_UPLOADED', 'PURCHASE_REQUIRED_FIELD_MISSING', 'PURCHASE_AMOUNT_MISMATCH');
+
+-- CreateEnum
+CREATE TYPE "UploadMethod" AS ENUM ('MANUAL', 'IMAGE', 'PDF', 'CAMERA');
+
+-- CreateEnum
+CREATE TYPE "ExportJobStatus" AS ENUM ('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED');
+
+-- CreateTable
+CREATE TABLE "users" (
+    "id" UUID NOT NULL,
+    "username" TEXT NOT NULL,
+    "password_hash" TEXT NOT NULL,
+    "real_name" TEXT NOT NULL,
+    "phone" TEXT,
+    "email" TEXT,
+    "status" TEXT NOT NULL DEFAULT 'ACTIVE',
+    "refresh_token_hash" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "roles" (
+    "id" UUID NOT NULL,
+    "code" "RoleCode" NOT NULL,
+    "name" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_roles" (
+    "id" UUID NOT NULL,
+    "user_id" UUID NOT NULL,
+    "role_id" UUID NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "user_roles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "expense_categories" (
+    "id" UUID NOT NULL,
+    "name" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "enabled" BOOLEAN NOT NULL DEFAULT true,
+    "limit_enabled" BOOLEAN NOT NULL DEFAULT false,
+    "invoice_required" BOOLEAN NOT NULL DEFAULT false,
+    "extension_type" "ExpenseExtensionType" NOT NULL DEFAULT 'NONE',
+    "sort_order" INTEGER NOT NULL DEFAULT 0,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "expense_categories_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "purchase_categories" (
+    "id" UUID NOT NULL,
+    "name" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "enabled" BOOLEAN NOT NULL DEFAULT true,
+    "sort_order" INTEGER NOT NULL DEFAULT 0,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "purchase_categories_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "expense_reports" (
+    "id" UUID NOT NULL,
+    "user_id" UUID NOT NULL,
+    "category_id" UUID NOT NULL,
+    "title" TEXT NOT NULL,
+    "amount_total" DECIMAL(12,2) NOT NULL,
+    "expense_date" TIMESTAMP(3) NOT NULL,
+    "submitted_at" TIMESTAMP(3),
+    "upload_method" "UploadMethod" NOT NULL,
+    "has_invoice" BOOLEAN NOT NULL DEFAULT false,
+    "invoice_required_snapshot" BOOLEAN NOT NULL DEFAULT false,
+    "invoice_attachment_status" "InvoiceAttachmentStatus" NOT NULL DEFAULT 'NOT_REQUIRED',
+    "is_over_limit" BOOLEAN NOT NULL DEFAULT false,
+    "over_limit_amount" DECIMAL(12,2) NOT NULL DEFAULT 0,
+    "status" "ExpenseReportStatus" NOT NULL DEFAULT 'SUBMITTED',
+    "remark" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "expense_reports_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "expense_normal_details" (
+    "id" UUID NOT NULL,
+    "report_id" UUID NOT NULL,
+    "entry_mode" "ExpenseEntryMode" NOT NULL DEFAULT 'TOTAL',
+    "usage_scene" TEXT,
+    "travel_note" TEXT,
+    "related_people" TEXT,
+    "unit_price" DECIMAL(12,2),
+    "quantity" DECIMAL(12,2),
+
+    CONSTRAINT "expense_normal_details_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "expense_travel_details" (
+    "id" UUID NOT NULL,
+    "report_id" UUID NOT NULL,
+    "trip_start_date" TIMESTAMP(3) NOT NULL,
+    "trip_end_date" TIMESTAMP(3) NOT NULL,
+    "claim_days" DECIMAL(8,2) NOT NULL,
+    "destination" TEXT NOT NULL,
+    "trip_reason" TEXT,
+    "traveler_name" TEXT NOT NULL,
+    "companions" TEXT,
+    "travel_standard" TEXT,
+
+    CONSTRAINT "expense_travel_details_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "expense_purchase_details" (
+    "id" UUID NOT NULL,
+    "report_id" UUID NOT NULL,
+    "product_name" TEXT NOT NULL,
+    "purchase_category_id" UUID NOT NULL,
+    "purchaser_name" TEXT NOT NULL,
+    "user_name" TEXT,
+    "unit_price" DECIMAL(12,2),
+    "quantity" DECIMAL(12,2),
+    "shipping_fee" DECIMAL(12,2),
+    "platform" TEXT,
+    "vendor_name" TEXT,
+    "product_note" TEXT,
+
+    CONSTRAINT "expense_purchase_details_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "attachments" (
+    "id" UUID NOT NULL,
+    "report_id" UUID,
+    "file_name" TEXT NOT NULL,
+    "file_type" TEXT NOT NULL,
+    "file_size" INTEGER NOT NULL,
+    "storage_key" TEXT NOT NULL,
+    "is_invoice_file" BOOLEAN NOT NULL DEFAULT false,
+    "uploaded_by" UUID NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "attachments_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "limit_rules" (
+    "id" UUID NOT NULL,
+    "name" TEXT NOT NULL,
+    "expense_category_id" UUID NOT NULL,
+    "enabled" BOOLEAN NOT NULL DEFAULT true,
+    "limit_amount" DECIMAL(12,2) NOT NULL,
+    "effective_at" TIMESTAMP(3) NOT NULL,
+    "description" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "limit_rules_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "expense_anomalies" (
+    "id" UUID NOT NULL,
+    "report_id" UUID NOT NULL,
+    "anomaly_type" "AnomalyType" NOT NULL,
+    "anomaly_message" TEXT NOT NULL,
+    "severity" "AnomalySeverity" NOT NULL DEFAULT 'MEDIUM',
+    "resolved" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "expense_anomalies_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "export_jobs" (
+    "id" UUID NOT NULL,
+    "requested_by" UUID NOT NULL,
+    "month" TEXT NOT NULL,
+    "status" "ExportJobStatus" NOT NULL DEFAULT 'PENDING',
+    "storage_key" TEXT,
+    "error_message" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "completed_at" TIMESTAMP(3),
+
+    CONSTRAINT "export_jobs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "roles_code_key" ON "roles"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_roles_user_id_role_id_key" ON "user_roles"("user_id", "role_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "expense_categories_code_key" ON "expense_categories"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "purchase_categories_code_key" ON "purchase_categories"("code");
+
+-- CreateIndex
+CREATE INDEX "expense_reports_user_id_idx" ON "expense_reports"("user_id");
+
+-- CreateIndex
+CREATE INDEX "expense_reports_category_id_idx" ON "expense_reports"("category_id");
+
+-- CreateIndex
+CREATE INDEX "expense_reports_expense_date_idx" ON "expense_reports"("expense_date");
+
+-- CreateIndex
+CREATE INDEX "expense_reports_submitted_at_idx" ON "expense_reports"("submitted_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "expense_normal_details_report_id_key" ON "expense_normal_details"("report_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "expense_travel_details_report_id_key" ON "expense_travel_details"("report_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "expense_purchase_details_report_id_key" ON "expense_purchase_details"("report_id");
+
+-- CreateIndex
+CREATE INDEX "attachments_report_id_idx" ON "attachments"("report_id");
+
+-- CreateIndex
+CREATE INDEX "limit_rules_expense_category_id_enabled_effective_at_idx" ON "limit_rules"("expense_category_id", "enabled", "effective_at");
+
+-- CreateIndex
+CREATE INDEX "expense_anomalies_report_id_idx" ON "expense_anomalies"("report_id");
+
+-- CreateIndex
+CREATE INDEX "expense_anomalies_anomaly_type_idx" ON "expense_anomalies"("anomaly_type");
+
+-- AddForeignKey
+ALTER TABLE "user_roles" ADD CONSTRAINT "user_roles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_roles" ADD CONSTRAINT "user_roles_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "expense_reports" ADD CONSTRAINT "expense_reports_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "expense_reports" ADD CONSTRAINT "expense_reports_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "expense_categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "expense_normal_details" ADD CONSTRAINT "expense_normal_details_report_id_fkey" FOREIGN KEY ("report_id") REFERENCES "expense_reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "expense_travel_details" ADD CONSTRAINT "expense_travel_details_report_id_fkey" FOREIGN KEY ("report_id") REFERENCES "expense_reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "expense_purchase_details" ADD CONSTRAINT "expense_purchase_details_report_id_fkey" FOREIGN KEY ("report_id") REFERENCES "expense_reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "expense_purchase_details" ADD CONSTRAINT "expense_purchase_details_purchase_category_id_fkey" FOREIGN KEY ("purchase_category_id") REFERENCES "purchase_categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "attachments" ADD CONSTRAINT "attachments_report_id_fkey" FOREIGN KEY ("report_id") REFERENCES "expense_reports"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "attachments" ADD CONSTRAINT "attachments_uploaded_by_fkey" FOREIGN KEY ("uploaded_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "limit_rules" ADD CONSTRAINT "limit_rules_expense_category_id_fkey" FOREIGN KEY ("expense_category_id") REFERENCES "expense_categories"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "expense_anomalies" ADD CONSTRAINT "expense_anomalies_report_id_fkey" FOREIGN KEY ("report_id") REFERENCES "expense_reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "export_jobs" ADD CONSTRAINT "export_jobs_requested_by_fkey" FOREIGN KEY ("requested_by") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

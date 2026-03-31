@@ -1,0 +1,281 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleCode {
+  EMPLOYEE
+  ADMIN
+}
+
+enum ExpenseExtensionType {
+  NONE
+  TRAVEL
+  PURCHASE
+}
+
+enum ExpenseEntryMode {
+  TOTAL
+  UNIT_PRICE
+}
+
+enum ExpenseReportStatus {
+  DRAFT
+  SUBMITTED
+  ARCHIVED
+}
+
+enum InvoiceAttachmentStatus {
+  PRESENT
+  MISSING_REQUIRED
+  DECLARED_BUT_NOT_UPLOADED
+  NOT_REQUIRED
+}
+
+enum AnomalySeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum AnomalyType {
+  OVER_LIMIT
+  INVOICE_MISSING_REQUIRED
+  INVOICE_DECLARED_BUT_NOT_UPLOADED
+  PURCHASE_REQUIRED_FIELD_MISSING
+  PURCHASE_AMOUNT_MISMATCH
+}
+
+enum UploadMethod {
+  MANUAL
+  IMAGE
+  PDF
+  CAMERA
+}
+
+enum ExportJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id               String          @id @default(uuid()) @db.Uuid
+  username         String          @unique
+  passwordHash     String          @map("password_hash")
+  realName         String          @map("real_name")
+  phone            String?         
+  email            String?
+  status           String          @default("ACTIVE")
+  refreshTokenHash String?         @map("refresh_token_hash")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  roles            UserRole[]
+  expenseReports   ExpenseReport[]
+  attachments      Attachment[]    @relation("UploadedAttachments")
+  exportJobs       ExportJob[]
+
+  @@map("users")
+}
+
+model Role {
+  id        String     @id @default(uuid()) @db.Uuid
+  code      RoleCode   @unique
+  name      String
+  createdAt DateTime   @default(now()) @map("created_at")
+  userRoles UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid @map("user_id")
+  roleId    String   @db.Uuid @map("role_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@map("user_roles")
+}
+
+model ExpenseCategory {
+  id              String                @id @default(uuid()) @db.Uuid
+  name            String
+  code            String                @unique
+  enabled         Boolean               @default(true)
+  limitEnabled    Boolean               @default(false) @map("limit_enabled")
+  invoiceRequired Boolean               @default(false) @map("invoice_required")
+  extensionType   ExpenseExtensionType  @default(NONE) @map("extension_type")
+  sortOrder       Int                   @default(0) @map("sort_order")
+  createdAt       DateTime              @default(now()) @map("created_at")
+  updatedAt       DateTime              @updatedAt @map("updated_at")
+  rules           LimitRule[]
+  expenseReports  ExpenseReport[]
+
+  @@map("expense_categories")
+}
+
+model PurchaseCategory {
+  id             String                  @id @default(uuid()) @db.Uuid
+  name           String
+  code           String                  @unique
+  enabled        Boolean                 @default(true)
+  sortOrder      Int                     @default(0) @map("sort_order")
+  createdAt      DateTime                @default(now()) @map("created_at")
+  updatedAt      DateTime                @updatedAt @map("updated_at")
+  purchaseDetail ExpensePurchaseDetail[]
+
+  @@map("purchase_categories")
+}
+
+model ExpenseReport {
+  id                      String                  @id @default(uuid()) @db.Uuid
+  userId                  String                  @db.Uuid @map("user_id")
+  categoryId              String                  @db.Uuid @map("category_id")
+  title                   String
+  amountTotal             Decimal                 @db.Decimal(12, 2) @map("amount_total")
+  expenseDate             DateTime                @map("expense_date")
+  submittedAt             DateTime?               @map("submitted_at")
+  uploadMethod            UploadMethod            @map("upload_method")
+  hasInvoice              Boolean                 @default(false) @map("has_invoice")
+  invoiceRequiredSnapshot Boolean                 @default(false) @map("invoice_required_snapshot")
+  invoiceAttachmentStatus InvoiceAttachmentStatus @default(NOT_REQUIRED) @map("invoice_attachment_status")
+  isOverLimit             Boolean                 @default(false) @map("is_over_limit")
+  overLimitAmount         Decimal                 @default(0) @db.Decimal(12, 2) @map("over_limit_amount")
+  status                  ExpenseReportStatus     @default(SUBMITTED)
+  remark                  String?
+  createdAt               DateTime                @default(now()) @map("created_at")
+  updatedAt               DateTime                @updatedAt @map("updated_at")
+  user                    User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category                ExpenseCategory         @relation(fields: [categoryId], references: [id])
+  normalDetail            ExpenseNormalDetail?
+  travelDetail            ExpenseTravelDetail?
+  purchaseDetail          ExpensePurchaseDetail?
+  attachments             Attachment[]
+  anomalies               ExpenseAnomaly[]
+
+  @@index([userId])
+  @@index([categoryId])
+  @@index([expenseDate])
+  @@index([submittedAt])
+  @@map("expense_reports")
+}
+
+model ExpenseNormalDetail {
+  id            String           @id @default(uuid()) @db.Uuid
+  reportId      String           @unique @db.Uuid @map("report_id")
+  entryMode     ExpenseEntryMode @default(TOTAL) @map("entry_mode")
+  usageScene    String?          @map("usage_scene")
+  travelNote    String?          @map("travel_note")
+  relatedPeople String?          @map("related_people")
+  unitPrice     Decimal?         @db.Decimal(12, 2) @map("unit_price")
+  quantity      Decimal?         @db.Decimal(12, 2)
+  report        ExpenseReport    @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@map("expense_normal_details")
+}
+
+model ExpenseTravelDetail {
+  id             String        @id @default(uuid()) @db.Uuid
+  reportId       String        @unique @db.Uuid @map("report_id")
+  tripStartDate  DateTime      @map("trip_start_date")
+  tripEndDate    DateTime      @map("trip_end_date")
+  claimDays      Decimal       @db.Decimal(8, 2) @map("claim_days")
+  destination    String
+  tripReason     String?       @map("trip_reason")
+  travelerName   String        @map("traveler_name")
+  companions     String?
+  travelStandard String?       @map("travel_standard")
+  report         ExpenseReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@map("expense_travel_details")
+}
+
+model ExpensePurchaseDetail {
+  id                 String            @id @default(uuid()) @db.Uuid
+  reportId           String            @unique @db.Uuid @map("report_id")
+  productName        String            @map("product_name")
+  purchaseCategoryId String            @db.Uuid @map("purchase_category_id")
+  purchaserName      String            @map("purchaser_name")
+  userName           String?           @map("user_name")
+  unitPrice          Decimal?          @db.Decimal(12, 2) @map("unit_price")
+  quantity           Decimal?          @db.Decimal(12, 2)
+  shippingFee        Decimal?          @db.Decimal(12, 2) @map("shipping_fee")
+  platform           String?
+  vendorName         String?           @map("vendor_name")
+  productNote        String?           @map("product_note")
+  report             ExpenseReport     @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  purchaseCategory   PurchaseCategory  @relation(fields: [purchaseCategoryId], references: [id])
+
+  @@map("expense_purchase_details")
+}
+
+model Attachment {
+  id            String        @id @default(uuid()) @db.Uuid
+  reportId      String?       @db.Uuid @map("report_id")
+  fileName      String        @map("file_name")
+  fileType      String        @map("file_type")
+  fileSize      Int           @map("file_size")
+  storageKey    String        @map("storage_key")
+  isInvoiceFile Boolean       @default(false) @map("is_invoice_file")
+  uploadedById  String        @db.Uuid @map("uploaded_by")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  report        ExpenseReport? @relation(fields: [reportId], references: [id], onDelete: SetNull)
+  uploadedBy    User          @relation("UploadedAttachments", fields: [uploadedById], references: [id])
+
+  @@index([reportId])
+  @@map("attachments")
+}
+
+model LimitRule {
+  id                String           @id @default(uuid()) @db.Uuid
+  name              String
+  expenseCategoryId String           @db.Uuid @map("expense_category_id")
+  enabled           Boolean          @default(true)
+  limitAmount       Decimal          @db.Decimal(12, 2) @map("limit_amount")
+  effectiveAt       DateTime         @map("effective_at")
+  description       String?
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+  expenseCategory   ExpenseCategory  @relation(fields: [expenseCategoryId], references: [id], onDelete: Cascade)
+
+  @@index([expenseCategoryId, enabled, effectiveAt])
+  @@map("limit_rules")
+}
+
+model ExpenseAnomaly {
+  id             String          @id @default(uuid()) @db.Uuid
+  reportId       String          @db.Uuid @map("report_id")
+  anomalyType    AnomalyType     @map("anomaly_type")
+  anomalyMessage String          @map("anomaly_message")
+  severity       AnomalySeverity @default(MEDIUM)
+  resolved       Boolean         @default(false)
+  createdAt      DateTime        @default(now()) @map("created_at")
+  report         ExpenseReport   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+  @@index([anomalyType])
+  @@map("expense_anomalies")
+}
+
+model ExportJob {
+  id           String          @id @default(uuid()) @db.Uuid
+  requestedById String         @db.Uuid @map("requested_by")
+  month        String
+  status       ExportJobStatus @default(PENDING)
+  storageKey   String?         @map("storage_key")
+  errorMessage String?         @map("error_message")
+  createdAt    DateTime        @default(now()) @map("created_at")
+  completedAt  DateTime?       @map("completed_at")
+  requestedBy  User            @relation(fields: [requestedById], references: [id], onDelete: Cascade)
+
+  @@map("export_jobs")
+}
+

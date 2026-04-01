@@ -20,26 +20,50 @@ export default function AdminExpensesPage() {
 
   return (
     <AppShell requireRole={RoleCode.ADMIN}>
-      <div className="grid gap-6">
-        <div>
-          <h1 className="text-3xl font-semibold text-slate-950">报销记录</h1>
-          <p className="mt-2 text-sm text-slate-500">支持按提交时间或费用发生时间切换查看。</p>
-        </div>
-        <Card>
-          <CardHeader><CardTitle>筛选</CardTitle></CardHeader>
-          <CardContent className="grid gap-4 md:grid-cols-2">
-            <label className="grid gap-2 text-sm"><span>月份</span><Input type="month" value={month} onChange={(event) => setMonth(event.target.value)} /></label>
-            <label className="grid gap-2 text-sm"><span>时间口径</span><Select value={timeBasis} onChange={(event) => setTimeBasis(event.target.value)}><option value="SUBMITTED_AT">按提交时间</option><option value="EXPENSE_DATE">按费用发生时间</option></Select></label>
+      <div className="doodle-page">
+        <section className="doodle-hero">
+          <div>
+            <p className="doodle-hero__eyebrow">CLAIM RECORDS</p>
+            <h1 className="doodle-hero__title">报销记录</h1>
+            <p className="doodle-hero__desc">支持按提交时间或费用发生时间切换口径，重点查看发票状态、超额标签和异常记录。</p>
+          </div>
+        </section>
+
+        <Card className="doodle-surface doodle-surface--compact">
+          <CardHeader className="doodle-card-header"><CardTitle>筛选</CardTitle></CardHeader>
+          <CardContent className="grid gap-4 pt-3 md:grid-cols-2">
+            <label className="doodle-filter-field">
+              <span>月份</span>
+              <Input type="month" value={month} onChange={(event) => setMonth(event.target.value)} />
+            </label>
+            <label className="doodle-filter-field">
+              <span>时间口径</span>
+              <Select value={timeBasis} onChange={(event) => setTimeBasis(event.target.value)}>
+                <option value="SUBMITTED_AT">按提交时间</option>
+                <option value="EXPENSE_DATE">按费用发生时间</option>
+              </Select>
+            </label>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="overflow-x-auto pt-6">
+
+        <Card className="doodle-surface">
+          <CardContent className="overflow-x-auto pt-4">
             <Table>
-              <TableHead><TableRow><TableHeader>标题</TableHeader><TableHeader>申请人</TableHeader><TableHeader>类别</TableHeader><TableHeader>金额</TableHeader><TableHeader>费用日期</TableHeader><TableHeader>发票状态</TableHeader><TableHeader>异常</TableHeader></TableRow></TableHead>
+              <TableHead>
+                <TableRow>
+                  <TableHeader>标题</TableHeader>
+                  <TableHeader>申请人</TableHeader>
+                  <TableHeader>类别</TableHeader>
+                  <TableHeader>金额</TableHeader>
+                  <TableHeader>费用日期</TableHeader>
+                  <TableHeader>发票状态</TableHeader>
+                  <TableHeader>异常</TableHeader>
+                </TableRow>
+              </TableHead>
               <TableBody>
                 {query.data?.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell><Link className="font-medium text-blue-700" href={`/admin/expenses/${item.id}`}>{item.title}</Link></TableCell>
+                    <TableCell><Link className="doodle-link" href={`/admin/expenses/${item.id}`}>{item.title}</Link></TableCell>
                     <TableCell>{item.applicantName}</TableCell>
                     <TableCell>{item.categoryName}</TableCell>
                     <TableCell>{currency(item.amountTotal)}</TableCell>
@@ -56,4 +80,3 @@ export default function AdminExpensesPage() {
     </AppShell>
   );
 }
-

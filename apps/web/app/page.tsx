@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 export default function HomePage() {
   return (
@@ -7,11 +7,19 @@ export default function HomePage() {
         <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
           <section className="flex flex-col gap-5">
             <span className="w-fit rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">Financial System V1</span>
-            <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-slate-950">统一录入、规则标记、异常核查与 Excel 导出的一体化报账平台</h1>
-            <p className="max-w-2xl text-base leading-7 text-slate-600">员工端支持普通、差旅、采购三类报销；管理端覆盖异常视图、规则管理、统计与月度导出。</p>
+            <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-slate-950">
+              统一录入、规则标记、异常核查与 Excel 导出的一体化报账平台
+            </h1>
+            <p className="max-w-2xl text-base leading-7 text-slate-600">
+              员工端支持普通、差旅、采购三类报销；管理端覆盖异常视图、规则管理、统计与月度导出。
+            </p>
             <div className="flex flex-wrap gap-3">
-              <Link className="rounded-xl bg-slate-950 px-5 py-3 text-sm font-medium text-white" href="/login">登录系统</Link>
-              <Link className="rounded-xl border border-slate-300 px-5 py-3 text-sm font-medium text-slate-700" href="/register">员工注册</Link>
+              <Link className="rounded-xl border border-slate-950 bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-black" href="/login">
+                登录系统
+              </Link>
+              <Link className="rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-400 hover:bg-slate-50" href="/register">
+                员工注册
+              </Link>
             </div>
           </section>
           <section className="grid gap-4 rounded-3xl bg-slate-950 p-6 text-white">
@@ -33,4 +41,3 @@ export default function HomePage() {
     </main>
   );
 }
-

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
+﻿import { BadRequestException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcryptjs";
@@ -12,7 +12,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
+    @Inject(ConfigService) private readonly configService: ConfigService
   ) {}
 
   async register(input: RegisterInput): Promise<AuthResponse> {
@@ -120,12 +120,12 @@ export class AuthService {
 
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: this.configService.get<string>("JWT_ACCESS_SECRET", "access-secret"),
-      expiresIn: this.configService.get<string>("JWT_ACCESS_EXPIRES_IN", "15m") as any
+      expiresIn: this.configService.get<string>("JWT_ACCESS_EXPIRES_IN", "15m") as never
     });
 
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: this.configService.get<string>("JWT_REFRESH_SECRET", "refresh-secret"),
-      expiresIn: this.configService.get<string>("JWT_REFRESH_EXPIRES_IN", "7d") as any
+      expiresIn: this.configService.get<string>("JWT_REFRESH_EXPIRES_IN", "7d") as never
     });
 
     await this.prisma.user.update({
@@ -149,5 +149,3 @@ export class AuthService {
     };
   }
 }
-
-

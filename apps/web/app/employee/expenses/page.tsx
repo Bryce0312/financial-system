@@ -4,7 +4,7 @@ import { useDeferredValue, useState } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 
-import { Badge, Card, CardContent, CardHeader, CardTitle, Input, Select, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@financial-system/ui";
+import { Badge, Card, CardContent, CardHeader, CardTitle, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@financial-system/ui";
 
 import { AppShell } from "@/components/app-shell";
 import { apiFetch } from "@/lib/api";
@@ -20,24 +20,28 @@ export default function EmployeeExpensesPage() {
 
   return (
     <AppShell>
-      <div className="grid gap-6">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="doodle-page">
+        <section className="doodle-hero doodle-hero--split">
           <div>
-            <h1 className="text-3xl font-semibold text-slate-950">我的报销</h1>
-            <p className="mt-2 text-sm text-slate-500">按月份查看已提交报销，进入详情查看异常标签和附件。</p>
+            <p className="doodle-hero__eyebrow">MY CLAIMS</p>
+            <h1 className="doodle-hero__title">我的报销</h1>
+            <p className="doodle-hero__desc">按月份查看已提交报销，进入详情页查看异常标签、发票状态和附件信息。</p>
           </div>
-          <Link href="/employee/expenses/new" className="rounded-xl bg-slate-950 px-4 py-3 text-sm font-medium text-white">新建报销</Link>
-        </div>
-        <Card>
-          <CardHeader>
-            <CardTitle>筛选</CardTitle>
-          </CardHeader>
-          <CardContent className="max-w-sm">
-            <label className="grid gap-2 text-sm"><span>月份</span><Input type="month" value={month} onChange={(event) => setMonth(event.target.value)} /></label>
+          <Link href="/employee/expenses/new" className="doodle-primary-action">新建报销</Link>
+        </section>
+
+        <Card className="doodle-surface doodle-surface--compact">
+          <CardHeader className="doodle-card-header"><CardTitle>筛选</CardTitle></CardHeader>
+          <CardContent className="max-w-sm pt-3">
+            <label className="doodle-filter-field">
+              <span>月份</span>
+              <Input type="month" value={month} onChange={(event) => setMonth(event.target.value)} />
+            </label>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="overflow-x-auto pt-6">
+
+        <Card className="doodle-surface">
+          <CardContent className="overflow-x-auto pt-4">
             <Table>
               <TableHead>
                 <TableRow>
@@ -52,7 +56,7 @@ export default function EmployeeExpensesPage() {
               <TableBody>
                 {query.data?.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell><Link className="font-medium text-blue-700" href={`/employee/expenses/${item.id}`}>{item.title}</Link></TableCell>
+                    <TableCell><Link className="doodle-link" href={`/employee/expenses/${item.id}`}>{item.title}</Link></TableCell>
                     <TableCell>{item.categoryName}</TableCell>
                     <TableCell>{currency(item.amountTotal)}</TableCell>
                     <TableCell>{shortDate(item.expenseDate)}</TableCell>
@@ -70,4 +74,3 @@ export default function EmployeeExpensesPage() {
     </AppShell>
   );
 }
-

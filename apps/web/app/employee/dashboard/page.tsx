@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -67,7 +67,7 @@ export default function EmployeeDashboardPage() {
           </article>
           <article className="doodle-guide-card">
             <span className="doodle-guide-card__step">02</span>
-            <h3>再补附件</h3>
+            <h3>上交附件</h3>
             <p>有发票的单据尽量同步上传，管理端查看会更顺畅，也能减少缺票标记。</p>
           </article>
           <article className="doodle-guide-card">

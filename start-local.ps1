@@ -113,7 +113,7 @@ if (-not (Test-PortListening -Port 3000)) {
     Remove-Item -LiteralPath $nextBuildDir -Recurse -Force -ErrorAction SilentlyContinue
   }
 
-  Start-Process -FilePath $nodePath -WorkingDirectory $webWorkingDirectory -ArgumentList $nextPath, "dev", "-H", "127.0.0.1", "-p", "3000" -RedirectStandardOutput $webOut -RedirectStandardError $webErr | Out-Null
+  Start-Process -FilePath $nodePath -WorkingDirectory $webWorkingDirectory -ArgumentList $nextPath, "dev", "-H", "0.0.0.0", "-p", "3000" -RedirectStandardOutput $webOut -RedirectStandardError $webErr | Out-Null
 
   if (-not (Wait-ForPort -Port 3000 -TimeoutSeconds 30)) {
     throw "Web server did not start on port 3000. Check $webErr"
@@ -123,7 +123,7 @@ Write-Host "Web ready on 3000" -ForegroundColor Green
 
 Write-Host ""
 Write-Host "Open these URLs:" -ForegroundColor Yellow
-Write-Host "  Web   http://127.0.0.1:3000/login"
+Write-Host "  Web   http://127.0.0.1:3000/login`n  LAN   http://<your-lan-ip>:3000/login"
 Write-Host "  API   http://127.0.0.1:3001/auth/login"
 Write-Host ""
 Write-Host "Logs:" -ForegroundColor Yellow

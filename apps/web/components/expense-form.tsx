@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -52,6 +52,20 @@ function formatExpenseError(message: string) {
         }
         return `${FIELD_LABELS[firstKey] || firstKey}\uff1a${firstMessage}`;
       }
+    }
+
+    if ((parsed as { message?: string }).message) {
+      const normalizedMessage = (parsed as { message?: string }).message || "";
+      if (normalizedMessage.includes("报销类别与表单类型不匹配")) {
+        return "当前报销类别和表单类型未同步，请重新选择类别后再提交。";
+      }
+      if (normalizedMessage.includes("报销类别不存在或已停用")) {
+        return "报销类别已失效，请刷新页面后重试。";
+      }
+      if (normalizedMessage.includes("存在不可用的附件")) {
+        return "有附件未上传成功或已失效，请重新上传后再提交。";
+      }
+      return normalizedMessage;
     }
 
     if (parsed.formErrors?.[0]) {
@@ -194,6 +208,7 @@ function SectionTitle({ eyebrow, title, desc }: { eyebrow: string; title: string
 export function ExpenseForm() {
   const router = useRouter();
   const [uploads, setUploads] = useState<Array<{ file: File; isInvoiceFile: boolean }>>([]);
+  const [clientError, setClientError] = useState<string | null>(null);
 
   const categoriesQuery = useQuery({
     queryKey: ["expense-categories"],
@@ -230,9 +245,10 @@ export function ExpenseForm() {
     }
   });
 
+  const watchedCategoryId = form.watch("categoryId");
   const selectedCategory = useMemo(
-    () => categories.find((item) => item.id === form.watch("categoryId")),
-    [categories, form]
+    () => categories.find((item) => item.id === watchedCategoryId),
+    [categories, watchedCategoryId]
   );
 
   const extensionType = selectedCategory?.extensionType || ExpenseExtensionType.NONE;
@@ -262,7 +278,6 @@ export function ExpenseForm() {
         method: "POST",
         body: JSON.stringify({
           ...payload,
-          extensionType,
           attachments: attachmentRefs
         })
       });
@@ -276,19 +291,45 @@ export function ExpenseForm() {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
+    const categoryId = String(formData.get("categoryId") || "");
+    const selectedSubmitCategory = categories.find((item) => item.id === categoryId);
+    const submitExtensionType = selectedSubmitCategory?.extensionType || ExpenseExtensionType.NONE;
+    if (!categoryId) {
+      setClientError("请选择有效的报销类别后再提交。");
+      return;
+    }
+
+    if (!selectedSubmitCategory) {
+      setClientError("类别数据已失效，请刷新页面后重试。");
+      return;
+    }
+
+    if (submitExtensionType === ExpenseExtensionType.PURCHASE) {
+      const productName = String(formData.get("productName") || "").trim();
+      const purchaseCategoryId = String(formData.get("purchaseCategoryId") || "").trim();
+      const purchaserName = String(formData.get("purchaserName") || "").trim();
+
+      if (!productName || !purchaseCategoryId || !purchaserName) {
+        setClientError("采购报销请补全商品名称、采购分类和采购人后再提交。");
+        return;
+      }
+    }
+
+    setClientError(null);
+
     const payload: Record<string, unknown> = {
-      categoryId: String(formData.get("categoryId") || ""),
+      categoryId,
       title: String(formData.get("title") || ""),
       amountTotal: Number(formData.get("amountTotal") || 0),
       expenseDate: String(formData.get("expenseDate") || ""),
       uploadMethod: String(formData.get("uploadMethod") || UploadMethod.MANUAL),
       hasInvoice: typeof hasInvoice === "boolean" ? hasInvoice : String(formData.get("hasInvoice") || "true") === "true",
       remark: String(formData.get("remark") || ""),
-      extensionType,
+      extensionType: submitExtensionType,
       attachments: []
     };
 
-    if (extensionType === ExpenseExtensionType.NONE) {
+    if (submitExtensionType === ExpenseExtensionType.NONE) {
       payload.entryMode = String(formData.get("entryMode") || ExpenseEntryMode.TOTAL);
       payload.usageScene = String(formData.get("usageScene") || "");
       payload.travelNote = String(formData.get("travelNote") || "");
@@ -301,7 +342,7 @@ export function ExpenseForm() {
       }
     }
 
-    if (extensionType === ExpenseExtensionType.TRAVEL) {
+    if (submitExtensionType === ExpenseExtensionType.TRAVEL) {
       payload.tripStartDate = String(formData.get("tripStartDate") || "");
       payload.tripEndDate = String(formData.get("tripEndDate") || "");
       payload.claimDays = Number(formData.get("claimDays") || 0);
@@ -312,7 +353,7 @@ export function ExpenseForm() {
       payload.travelStandard = String(formData.get("travelStandard") || "");
     }
 
-    if (extensionType === ExpenseExtensionType.PURCHASE) {
+    if (submitExtensionType === ExpenseExtensionType.PURCHASE) {
       payload.productName = String(formData.get("productName") || "");
       payload.purchaseCategoryId = String(formData.get("purchaseCategoryId") || "");
       payload.purchaserName = String(formData.get("purchaserName") || "");
@@ -564,7 +605,8 @@ export function ExpenseForm() {
           </Button>
         </div>
         <p className="expense-art-actionBar__hint">{TEXT.submitHint}</p>
-        {mutation.error ? <div className="expense-art-errorBox" role="alert" aria-live="polite">{formatExpenseError(mutation.error.message)}</div> : null}
+        {clientError ? <div className="expense-art-errorBox" role="alert" aria-live="polite">{clientError}</div> : null}
+        {!clientError && mutation.error ? <div className="expense-art-errorBox" role="alert" aria-live="polite">{formatExpenseError(mutation.error.message)}</div> : null}
       </div>
     </form>
   );

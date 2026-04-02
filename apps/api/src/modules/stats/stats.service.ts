@@ -13,16 +13,14 @@ export class StatsService {
   async overview(month: string): Promise<DashboardOverview> {
     const reports = await this.findReportsForMonth(month);
     const totalAmount = reports.reduce((sum, report) => sum + decimalToNumber(report.amountTotal), 0);
-    const purchaseAmount = reports
-      .filter((report) => report.category.extensionType === ExpenseExtensionType.PURCHASE)
-      .reduce((sum, report) => sum + decimalToNumber(report.amountTotal), 0);
+    const purchaseCount = reports.filter((report) => report.category.extensionType === ExpenseExtensionType.PURCHASE).length;
 
     return {
       totalAmount,
       totalCount: reports.length,
       overLimitCount: reports.filter((report) => report.isOverLimit).length,
       invoiceMissingCount: reports.filter((report) => report.invoiceAttachmentStatus !== "PRESENT" && report.invoiceRequiredSnapshot).length,
-      purchaseAmountShare: totalAmount > 0 ? purchaseAmount / totalAmount : 0,
+      purchaseCountShare: reports.length > 0 ? purchaseCount / reports.length : 0,
       pendingAnomalyCount: reports.reduce((sum, report) => sum + report.anomalies.filter((item) => !item.resolved).length, 0)
     };
   }

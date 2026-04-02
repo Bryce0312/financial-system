@@ -20,7 +20,7 @@ export interface DashboardOverview {
   totalCount: number;
   overLimitCount: number;
   invoiceMissingCount: number;
-  purchaseAmountShare: number;
+  purchaseCountShare: number;
   pendingAnomalyCount: number;
 }
 

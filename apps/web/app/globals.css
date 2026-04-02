@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 
 :root {
   --background: #f5f7fb;
@@ -2236,4 +2236,324 @@ main {
   .doodle-callout__figure {
     max-width: 180px;
   }
+}
+
+.expense-detail-attachmentCard {
+  overflow: hidden;
+}
+
+.expense-detail-attachmentHeader {
+  display: grid;
+  gap: 10px;
+}
+
+.expense-detail-attachmentHeader__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.expense-detail-attachmentRow {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  padding: 16px;
+  border: 2px solid rgba(201, 193, 215, 0.76);
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.98) 0%, rgba(249, 246, 253, 0.98) 100%);
+  box-shadow: 0 12px 26px rgba(91, 83, 111, 0.06);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.expense-detail-attachmentRow:hover {
+  transform: translateY(-2px);
+  border-color: rgba(184, 173, 207, 0.96);
+  box-shadow: 0 18px 34px rgba(91, 83, 111, 0.1);
+}
+
+.expense-detail-attachmentRow--invoice {
+  border-color: rgba(217, 115, 141, 0.42);
+  background: linear-gradient(180deg, rgba(255, 247, 249, 0.98) 0%, rgba(249, 246, 253, 0.98) 100%);
+}
+
+.expense-detail-attachmentRow__thumbWrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 132px;
+  padding: 10px;
+  border: 1px dashed rgba(201, 193, 215, 0.8);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.expense-detail-attachmentRow__thumb {
+  width: 100%;
+  height: 132px;
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+.expense-detail-previewArt {
+  width: 100%;
+  max-width: 180px;
+  filter: drop-shadow(0 10px 20px rgba(91, 83, 111, 0.08));
+}
+
+.expense-detail-attachmentRow__invoiceFlag {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #d9738d;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 14px rgba(217, 115, 141, 0.22);
+}
+
+.expense-detail-attachmentRow__body {
+  display: grid;
+  gap: 12px;
+}
+
+.expense-detail-attachmentRow__meta {
+  display: grid;
+  gap: 4px;
+}
+
+.expense-detail-attachmentRow__name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.expense-detail-attachmentRow__type {
+  margin: 0;
+  font-size: 13px;
+  color: #6b647a;
+}
+
+.expense-detail-attachmentRow__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.expense-detail-previewModal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.expense-detail-previewModal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(8px);
+}
+
+.expense-detail-previewModal__panel {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 16px;
+  width: min(960px, calc(100vw - 32px));
+  max-height: min(88vh, 900px);
+  padding: 18px;
+  border: 2px solid rgba(201, 193, 215, 0.9);
+  border-radius: 30px;
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.98) 0%, rgba(249, 246, 253, 0.98) 100%);
+  box-shadow: 0 28px 60px rgba(15, 23, 42, 0.22);
+}
+
+.expense-detail-previewModal__head,
+.expense-detail-previewModal__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.expense-detail-previewModal__eyebrow {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #8a8598;
+}
+
+.expense-detail-previewModal__title {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.1;
+  color: #111827;
+}
+
+.expense-detail-previewModal__body {
+  display: grid;
+  min-height: 360px;
+  overflow: hidden;
+  border: 1px solid rgba(201, 193, 215, 0.85);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.expense-detail-previewModal__image,
+.expense-detail-previewModal__frame {
+  width: 100%;
+  min-height: 360px;
+  max-height: calc(88vh - 190px);
+  object-fit: contain;
+  background: #fff;
+}
+
+.expense-detail-previewModal__frame {
+  border: 0;
+}
+
+.expense-detail-previewModal__fallback {
+  display: grid;
+  place-items: center;
+  gap: 14px;
+  padding: 32px;
+  text-align: center;
+  color: #5b6472;
+}
+
+@media (max-width: 860px) {
+  .expense-detail-attachmentRow {
+    grid-template-columns: 1fr;
+  }
+
+  .expense-detail-attachmentRow__thumbWrap {
+    min-height: 110px;
+  }
+
+  .expense-detail-previewModal {
+    padding: 12px;
+  }
+
+  .expense-detail-previewModal__panel {
+    width: min(100vw - 24px, 960px);
+    padding: 14px;
+    border-radius: 24px;
+  }
+}
+.doodle-detail-page {
+  display: grid;
+  gap: 20px;
+}
+
+.doodle-detail-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
+  gap: 18px;
+  align-items: end;
+}
+
+.doodle-detail-metaGrid {
+  display: grid;
+  gap: 10px 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.doodle-detail-metaGrid p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.doodle-attachment-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 16px 18px;
+  border: 2px solid rgba(219, 214, 229, 0.9);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(249,246,253,0.98) 100%);
+  box-shadow: 0 12px 26px rgba(123, 114, 144, 0.06);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.doodle-attachment-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(201, 193, 215, 0.96);
+  box-shadow: 0 16px 32px rgba(91, 83, 111, 0.09);
+}
+
+.doodle-attachment-item--invoice {
+  border-color: rgba(217, 115, 141, 0.28);
+  background: linear-gradient(180deg, rgba(255, 248, 250, 0.98) 0%, rgba(255,255,255,0.98) 100%);
+}
+
+.doodle-attachment-item__meta {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+@media (max-width: 960px) {
+  .doodle-detail-hero,
+  .doodle-detail-metaGrid,
+  .doodle-attachment-item {
+    grid-template-columns: 1fr;
+  }
+}.doodle-attachment-section {
+  display: grid;
+  gap: 14px;
+}
+
+.doodle-attachment-section__header {
+  display: grid;
+  gap: 8px;
+}
+
+.doodle-attachment-list {
+  display: grid;
+  gap: 12px;
+}
+
+.doodle-attachment-item {
+  padding: 16px 18px;
+  border: 1.5px solid rgba(219, 214, 229, 0.92);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 16px 32px rgba(91, 83, 111, 0.06);
+}
+
+.doodle-attachment-item__hint {
+  margin: 0;
+  font-size: 13px;
+  color: #6c6580;
+}
+
+.doodle-attachment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.doodle-attachment-empty {
+  display: grid;
+  gap: 6px;
+  padding: 18px 20px;
+  border: 1.5px dashed rgba(209, 201, 223, 0.92);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 252, 247, 0.9) 0%, rgba(255, 255, 255, 0.96) 100%);
 }

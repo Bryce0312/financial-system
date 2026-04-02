@@ -1,4 +1,10 @@
-﻿$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Stop"
+$normalizedPath = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
+if ($normalizedPath) {
+$env:Path = $normalizedPath
+}
+Remove-Item Env:PATH -ErrorAction SilentlyContinue
+
 
 function Write-Step {
   param([string]$Message)
@@ -51,9 +57,7 @@ $webErr = Join-Path $logsDir "web.start.err.log"
 
 New-Item -ItemType Directory -Force -Path $logsDir | Out-Null
 
-$nodePath = Resolve-RequiredCommand -Name "node"
-$npmPath = Resolve-RequiredCommand -Name "npm.cmd"
-$cmdPath = Resolve-RequiredCommand -Name "cmd.exe"
+$nodePath = "C:\Program Files\nodejs\node.exe"
 $postgresPath = Join-Path $env:USERPROFILE ".conda\envs\financial-system\Library\bin\postgres.exe"
 
 if (-not (Test-Path $postgresPath)) {
@@ -94,7 +98,22 @@ Write-Host "API ready on 3001" -ForegroundColor Green
 Write-Step "Checking Web"
 if (-not (Test-PortListening -Port 3000)) {
   $webWorkingDirectory = Join-Path $root "apps\web"
-  Start-Process -FilePath $cmdPath -WorkingDirectory $webWorkingDirectory -ArgumentList "/d", "/c", '"' + $npmPath + '" run dev' -RedirectStandardOutput $webOut -RedirectStandardError $webErr | Out-Null
+  $webCacheDir = Join-Path $webWorkingDirectory ".next"
+  if (Test-Path $webCacheDir) {
+    Remove-Item -LiteralPath $webCacheDir -Recurse -Force -ErrorAction SilentlyContinue
+  }
+
+  $nextPath = Join-Path $root "node_modules\next\dist\bin\next"
+  $nextBuildDir = Join-Path $webWorkingDirectory ".next"
+  if (-not (Test-Path $nextPath)) {
+    throw "Next.js executable not found at $nextPath"
+  }
+
+  if (Test-Path $nextBuildDir) {
+    Remove-Item -LiteralPath $nextBuildDir -Recurse -Force -ErrorAction SilentlyContinue
+  }
+
+  Start-Process -FilePath $nodePath -WorkingDirectory $webWorkingDirectory -ArgumentList $nextPath, "dev", "-H", "127.0.0.1", "-p", "3000" -RedirectStandardOutput $webOut -RedirectStandardError $webErr | Out-Null
 
   if (-not (Wait-ForPort -Port 3000 -TimeoutSeconds 30)) {
     throw "Web server did not start on port 3000. Check $webErr"
@@ -114,3 +133,5 @@ Write-Host "  API stdout         $apiOut"
 Write-Host "  API stderr         $apiErr"
 Write-Host "  Web stdout         $webOut"
 Write-Host "  Web stderr         $webErr"
+
+

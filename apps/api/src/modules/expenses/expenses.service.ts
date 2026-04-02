@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+﻿import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 
 import {
   AnomalySeverity,
@@ -229,7 +229,7 @@ export class ExpensesService {
     if (args.isOverLimit) {
       anomalies.push({
         anomalyType: AnomalyType.OVER_LIMIT,
-        anomalyMessage: `当前金额超过${args.category.name}限额 ${args.overLimitAmount.toFixed(2)} 元，已标记但不影响提交。`,
+        anomalyMessage: `当前金额超过${args.category.name}限额 ${args.overLimitAmount.toFixed(2)} 元，已标记但不影响提交。`, 
         severity: AnomalySeverity.MEDIUM
       });
     }
@@ -264,7 +264,7 @@ export class ExpensesService {
       if (computed > 0 && Math.abs(computed - args.amountTotal) > 0.009) {
         anomalies.push({
           anomalyType: AnomalyType.PURCHASE_AMOUNT_MISMATCH,
-          anomalyMessage: `采购明细计算值为 ${computed.toFixed(2)} 元，与总金额 ${args.amountTotal.toFixed(2)} 元不一致。`,
+          anomalyMessage: `采购明细计算值为 ${computed.toFixed(2)} 元，与总金额 ${args.amountTotal.toFixed(2)} 元不一致。`, 
           severity: AnomalySeverity.MEDIUM
         });
       }

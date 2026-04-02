@@ -1,6 +1,6 @@
-import { clearSession, readSession } from "./auth";
+﻿import { clearSession, readSession } from "./auth";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:3001";
 
 function buildHeaders(init?: RequestInit, token?: string) {
   const session = readSession();

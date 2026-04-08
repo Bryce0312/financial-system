@@ -201,7 +201,7 @@ export default function ExpenseCategoriesPage() {
                       <Badge variant={item.enabled ? "success" : "warning"}>{item.enabled ? "启用中" : "已停用"}</Badge>
                     </TableCell>
                     <TableCell>
-                      <Button type="button" variant="outline" onClick={() => startEdit(item)}>
+                      <Button type="button" variant="outline" className="admin-config-rowButton" onClick={() => startEdit(item)}>
                         编辑
                       </Button>
                     </TableCell>
@@ -296,4 +296,5 @@ export default function ExpenseCategoriesPage() {
     </AppShell>
   );
 }
+
 

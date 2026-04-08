@@ -51,12 +51,14 @@ export function ConfigPageLayout({
   children: ReactNode;
 }) {
   return (
-    <div className="admin-config-layout space-y-6">
-      <div className="admin-config-layout__head flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div className="admin-config-layout__copy space-y-2">
+    <div className="admin-config-layout space-y-5">
+      <div className="admin-config-layout__head flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+        <div className="admin-config-layout__copy space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">Admin config</p>
-          <h1 className="text-[40px] font-black tracking-[-0.06em] text-slate-950">{title}</h1>
-          <p className="max-w-3xl text-sm leading-7 text-slate-500">{description}</p>
+          <div className="space-y-2">
+            <h1 className="text-[36px] font-black tracking-[-0.06em] text-slate-950 xl:text-[40px]">{title}</h1>
+            <p className="max-w-3xl text-sm leading-7 text-slate-500">{description}</p>
+          </div>
         </div>
         {actions ? <div className="admin-config-layout__actions flex shrink-0 items-center gap-3">{actions}</div> : null}
       </div>
@@ -66,7 +68,7 @@ export function ConfigPageLayout({
 }
 
 export function ConfigPageGrid({ children }: { children: ReactNode }) {
-  return <div className="admin-config-grid grid gap-6 xl:grid-cols-[minmax(0,1fr)_400px]">{children}</div>;
+  return <div className="admin-config-grid grid gap-5 xl:grid-cols-[minmax(0,1fr)_408px]">{children}</div>;
 }
 
 export function ConfigTableCard({
@@ -90,7 +92,10 @@ export function ConfigTableCard({
         {stats?.length ? (
           <div className="admin-config-stats flex flex-wrap gap-3">
             {stats.map((item) => (
-              <div key={item.label} className="admin-config-statChip rounded-[22px] border-2 border-[#ece5f4] bg-white/90 px-4 py-3 shadow-[3px_3px_0_rgba(236,229,244,0.65)]">
+              <div
+                key={item.label}
+                className="admin-config-statChip rounded-[22px] border-2 border-[#ece5f4] bg-white/90 px-4 py-3 shadow-[3px_3px_0_rgba(236,229,244,0.65)]"
+              >
                 <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">{item.label}</p>
                 <p className="mt-1 text-lg font-black tracking-[-0.04em] text-slate-900">{item.value}</p>
               </div>
@@ -98,7 +103,7 @@ export function ConfigTableCard({
           </div>
         ) : null}
       </CardHeader>
-      <CardContent className="admin-config-tableContent overflow-x-auto pt-6">
+      <CardContent className="admin-config-tableContent overflow-x-auto pt-5">
         <div className="admin-config-tableScroll">{children}</div>
       </CardContent>
     </Card>
@@ -123,7 +128,7 @@ export function ConfigEditorCard({
         <CardTitle className="text-[30px]">{title}</CardTitle>
         <CardDescription className="max-w-sm">{description}</CardDescription>
       </CardHeader>
-      <CardContent className="admin-config-editorContent space-y-5 py-6">{children}</CardContent>
+      <CardContent className="admin-config-editorContent space-y-5 py-5">{children}</CardContent>
     </Card>
   );
 }
@@ -184,7 +189,7 @@ export function ConfigActionBar({
 }) {
   return (
     <div className="admin-config-actionBar flex flex-col gap-3 sm:flex-row">
-      <Button type="submit" className="admin-config-actionButton sm:flex-1" disabled={isSubmitting}>
+      <Button type="submit" className="admin-config-actionButton admin-config-actionButton--primary sm:flex-1" disabled={isSubmitting}>
         {isSubmitting ? "处理中..." : submitLabel}
       </Button>
       <Button type="button" variant="outline" onClick={onCancel} className="admin-config-actionButton sm:flex-1">
@@ -195,3 +200,5 @@ export function ConfigActionBar({
 }
 
 export { Badge, Button, Input, Select, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Textarea };
+
+

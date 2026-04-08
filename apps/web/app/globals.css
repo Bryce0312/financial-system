@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
   --background: #f5f7fb;
@@ -2716,5 +2716,451 @@ main {
 
   .admin-config-layout__actions > * {
     width: 100%;
+  }
+}
+
+/* Final UI overrides to keep one stable surface system above legacy duplicated blocks. */
+.app-sidebar,
+.app-content__frame,
+.doodle-guide-card,
+.doodle-stat-card,
+.doodle-callout,
+.expense-art-card,
+.expense-art-scrollPanel,
+.doodle-attachment-item,
+.admin-config-card,
+.admin-config-statChip,
+.admin-config-statusCard {
+  border-color: rgba(214, 208, 227, 0.9) !important;
+  border-radius: 30px !important;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.06) !important;
+}
+
+.app-sidebar,
+.app-content__frame,
+.expense-art-scrollPanel,
+.doodle-guide-card,
+.doodle-stat-card,
+.doodle-callout,
+.admin-config-card {
+  overflow: hidden;
+}
+
+.app-shell-page {
+  padding: 16px 18px;
+}
+
+.app-shell-layout {
+  gap: 16px;
+}
+
+.app-sidebar__nav {
+  gap: 8px;
+}
+
+.app-nav-link {
+  min-height: 76px;
+  padding: 14px 18px;
+  border-radius: 24px;
+}
+
+.app-nav-link__label {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.app-nav-link__note {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+}
+
+.app-sidebar__tip,
+.app-sidebar__user {
+  border-radius: 24px;
+}
+
+.app-sidebar__logout {
+  border-color: rgba(17, 24, 39, 0.9);
+  border-radius: 22px;
+}
+
+.doodle-guide-card {
+  padding: 22px 22px 24px;
+}
+
+.doodle-guide-card h3 {
+  line-height: 1.15;
+}
+
+.doodle-guide-card p,
+.doodle-callout p,
+.doodle-hero__desc {
+  color: #5f6878;
+}
+
+.doodle-stat-card__label {
+  font-size: 14px;
+}
+
+.doodle-stat-card__value {
+  letter-spacing: -0.05em;
+}
+
+.admin-config-layout__copy h1,
+.admin-config-card h3 {
+  text-wrap: balance;
+}
+
+.admin-config-layout__copy p,
+.admin-config-card p,
+.admin-config-tableScroll td,
+.admin-config-tableScroll th {
+  letter-spacing: 0;
+}
+
+.admin-config-tableContent {
+  padding-top: 18px !important;
+}
+
+.admin-config-tableScroll {
+  padding-right: 4px;
+}
+
+.admin-config-tableScroll table {
+  min-width: 780px;
+}
+
+.admin-config-tableScroll th,
+.admin-config-tableScroll td {
+  vertical-align: middle;
+}
+
+.admin-config-tableScroll th {
+  white-space: nowrap;
+}
+
+.admin-config-tableScroll td:nth-child(n + 3):not(:last-child) {
+  white-space: nowrap;
+}
+
+.admin-config-tableScroll td:first-child p:first-child {
+  line-height: 1.25;
+}
+
+.admin-config-tableScroll td:first-child p:last-child {
+  margin-top: 4px;
+  line-height: 1.35;
+}
+
+.admin-config-tableScroll td:last-child,
+.admin-config-tableScroll th:last-child {
+  text-align: right;
+}
+
+.admin-config-tableScroll td:last-child button {
+  min-width: 88px;
+}
+
+.admin-config-editorContent form {
+  display: grid;
+  gap: 18px;
+}
+
+.admin-config-field :is(input, select, textarea) {
+  line-height: 1.45;
+}
+
+.admin-config-statusCard {
+  padding: 18px;
+}
+
+.admin-config-actionBar {
+  margin-top: 6px;
+}
+
+.admin-config-actionBar .admin-config-actionButton {
+  min-height: 50px;
+}
+
+@media (max-width: 1080px) {
+  .app-shell-page {
+    padding: 14px;
+  }
+
+  .app-nav-link {
+    min-height: 68px;
+  }
+
+  .admin-config-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-config-tableScroll table {
+    min-width: 720px;
+  }
+}
+
+
+/* Admin layout stabilization and polish */
+.app-shell-page :is(.doodle-surface, .doodle-stat-card, .doodle-guide-card, .doodle-callout, .admin-filter-panel, .admin-table-panel, .admin-side-panel, .doodle-attachment-item, .doodle-attachment-empty, .expense-detail-attachmentRow, .expense-detail-previewModal__panel) {
+  border-color: rgba(219, 214, 229, 0.92) !important;
+  border-radius: 30px !important;
+}
+
+.app-shell-page :is(.app-sidebar, .app-sidebar__user, .app-sidebar__tip) {
+  border-color: rgba(219, 214, 229, 0.82) !important;
+}
+
+.app-shell-page :is(.app-sidebar__logout, .app-nav-link, .admin-config-rowButton, .admin-config-actionButton, .admin-side-panel__primary) {
+  border-radius: 20px !important;
+}
+
+.app-shell-page .app-sidebar {
+  min-height: calc(100vh - 36px);
+}
+
+.app-sidebar__navWrap {
+  min-height: 0;
+}
+
+.app-sidebar__nav {
+  align-content: start;
+}
+
+@media (min-width: 1081px) {
+  .app-sidebar__navWrap {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .app-sidebar__nav {
+    max-height: 100%;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+}
+
+.app-nav-link {
+  min-height: 72px;
+}
+
+.app-nav-link__label {
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.app-nav-link__note {
+  font-size: 10px;
+}
+
+.doodle-surface,
+.doodle-stat-card {
+  overflow: hidden;
+}
+
+.doodle-stat-card__header {
+  padding-bottom: 6px;
+}
+
+.doodle-stat-card__body {
+  display: grid;
+  gap: 10px;
+}
+
+.doodle-stat-card__value {
+  line-height: 0.95;
+}
+
+.admin-list-page {
+  display: grid;
+  gap: 22px;
+}
+
+.admin-list-hero {
+  display: grid;
+  gap: 18px;
+  align-items: end;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 420px);
+}
+
+.admin-list-hero--compact {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.admin-list-hero__copy {
+  display: grid;
+  gap: 2px;
+}
+
+.admin-panel-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.admin-filter-panel,
+.admin-side-panel,
+.admin-table-panel {
+  background: linear-gradient(180deg, rgba(255, 252, 247, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
+  box-shadow: 0 18px 42px rgba(91, 83, 111, 0.08) !important;
+}
+
+.admin-filter-panel__header,
+.admin-table-panel__header,
+.admin-side-panel__header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-filter-panel__content {
+  display: grid;
+  gap: 16px;
+  padding-top: 4px;
+}
+
+.admin-filter-panel--single .admin-filter-panel__content {
+  max-width: 360px;
+}
+
+.admin-table-panel__desc {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #677285;
+}
+
+.admin-table-panel__content {
+  padding-top: 16px;
+}
+
+.admin-table-scroll {
+  overflow-x: auto;
+}
+
+.admin-table-scroll table {
+  width: 100%;
+}
+
+.admin-table-scroll thead th {
+  white-space: nowrap;
+}
+
+.admin-table-scroll tbody td {
+  vertical-align: middle;
+}
+
+.admin-badge-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-status-board {
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 2px solid rgba(219, 214, 229, 0.9);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 12px 28px rgba(123, 114, 144, 0.07);
+}
+
+.admin-status-board__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.admin-status-board__row strong {
+  color: #111827;
+}
+
+.admin-copy-block {
+  display: grid;
+  gap: 12px;
+  color: #5b6472;
+  line-height: 1.8;
+}
+
+.admin-config-layout__copy {
+  max-width: 760px;
+}
+
+.admin-config-layout__actions > * {
+  min-width: 132px;
+}
+
+.admin-config-cardHeader {
+  padding-bottom: 18px !important;
+}
+
+.admin-config-cardHeader .text-\[30px\] {
+  line-height: 1.08;
+}
+
+.admin-config-tableCard .admin-config-tableContent {
+  padding-top: 14px;
+}
+
+.admin-config-tableCard tbody td {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.admin-config-tableCard tbody td:first-child {
+  min-width: 156px;
+}
+
+.admin-config-rowButton {
+  min-width: 88px;
+  white-space: nowrap;
+}
+
+.admin-config-statusCard {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-config-actionBar {
+  margin-top: 2px;
+}
+
+.admin-config-actionButton {
+  min-height: 48px;
+}
+
+.admin-config-actionButton--primary {
+  box-shadow: 0 12px 24px rgba(17, 24, 39, 0.16) !important;
+}
+
+.admin-config-editorContent form,
+.admin-config-tableScroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(170, 159, 196, 0.65) transparent;
+}
+
+@media (max-width: 1380px) {
+  .admin-list-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-panel-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1080px) {
+  .app-sidebar {
+    min-height: auto;
+  }
+
+  .admin-table-panel__content,
+  .admin-side-panel__content {
+    overflow: visible;
   }
 }

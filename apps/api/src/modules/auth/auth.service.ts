@@ -108,9 +108,9 @@ export class AuthService {
     realName: string;
     email: string | null;
     phone: string | null;
-    roles: Array<{ role: { code: RoleCode } }>;
+    roles: Array<{ role: { code: string } }>;
   }): Promise<AuthResponse> {
-    const roles = user.roles.map((item) => item.role.code);
+    const roles = user.roles.map((item) => item.role.code as RoleCode);
     const payload = {
       sub: user.id,
       username: user.username,

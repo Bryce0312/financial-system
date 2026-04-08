@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UsePipes } from "@nestjs/common";
+﻿import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
 
 import { RoleCode, ruleSchema } from "@financial-system/types";
 
@@ -18,15 +18,12 @@ export class RulesController {
   }
 
   @Post()
-  @UsePipes(new ZodValidationPipe(ruleSchema))
-  create(@Body() body: unknown) {
+  create(@Body(new ZodValidationPipe(ruleSchema)) body: unknown) {
     return this.rulesService.create(body as never);
   }
 
   @Patch(":id")
-  @UsePipes(new ZodValidationPipe(ruleSchema.partial()))
-  update(@Param("id") id: string, @Body() body: unknown) {
+  update(@Param("id") id: string, @Body(new ZodValidationPipe(ruleSchema.partial())) body: unknown) {
     return this.rulesService.update(id, body as never);
   }
 }
-

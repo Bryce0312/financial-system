@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+﻿import { Injectable, NotFoundException } from "@nestjs/common";
 
 import { RuleInput } from "@financial-system/types";
 
@@ -20,8 +20,12 @@ export class RulesService {
   create(input: RuleInput) {
     return this.prisma.limitRule.create({
       data: {
-        ...input,
-        effectiveAt: new Date(input.effectiveAt)
+        name: input.name,
+        expenseCategoryId: input.expenseCategoryId,
+        enabled: input.enabled ?? true,
+        limitAmount: input.limitAmount,
+        effectiveAt: new Date(input.effectiveAt),
+        description: input.description || ""
       }
     });
   }
@@ -35,7 +39,10 @@ export class RulesService {
     return this.prisma.limitRule.update({
       where: { id },
       data: {
-        ...input,
+        name: input.name,
+        enabled: input.enabled,
+        limitAmount: input.limitAmount,
+        description: input.description,
         effectiveAt: input.effectiveAt ? new Date(input.effectiveAt) : undefined
       }
     });
@@ -56,4 +63,3 @@ export class RulesService {
     });
   }
 }
-

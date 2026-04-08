@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UsePipes } from "@nestjs/common";
+﻿import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
 
 import { expenseCategorySchema, RoleCode } from "@financial-system/types";
 
@@ -18,16 +18,13 @@ export class ExpenseCategoriesController {
 
   @Post()
   @Roles(RoleCode.ADMIN)
-  @UsePipes(new ZodValidationPipe(expenseCategorySchema))
-  create(@Body() body: unknown) {
+  create(@Body(new ZodValidationPipe(expenseCategorySchema)) body: unknown) {
     return this.expenseCategoriesService.create(body as never);
   }
 
   @Patch(":id")
   @Roles(RoleCode.ADMIN)
-  @UsePipes(new ZodValidationPipe(expenseCategorySchema.partial()))
-  update(@Param("id") id: string, @Body() body: unknown) {
+  update(@Param("id") id: string, @Body(new ZodValidationPipe(expenseCategorySchema.partial())) body: unknown) {
     return this.expenseCategoriesService.update(id, body as never);
   }
 }
-

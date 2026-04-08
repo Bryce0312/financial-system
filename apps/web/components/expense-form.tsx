@@ -217,11 +217,11 @@ export function ExpenseForm() {
 
   const purchaseCategoriesQuery = useQuery({
     queryKey: ["purchase-categories"],
-    queryFn: () => apiFetch<Array<{ id: string; name: string }>>("/purchase-categories")
+    queryFn: () => apiFetch<Array<{ id: string; name: string; enabled: boolean }>>("/purchase-categories")
   });
 
-  const categories = categoriesQuery.data || [];
-  const purchaseCategories = purchaseCategoriesQuery.data || [];
+  const categories = (categoriesQuery.data || []).filter((item) => item.enabled);
+  const purchaseCategories = (purchaseCategoriesQuery.data || []).filter((item) => item.enabled);
 
   const form = useForm<any>({
     resolver: zodResolver(createExpenseSchema as any),
@@ -611,6 +611,7 @@ export function ExpenseForm() {
     </form>
   );
 }
+
 
 
 

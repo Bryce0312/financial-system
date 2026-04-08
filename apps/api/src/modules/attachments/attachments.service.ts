@@ -1,5 +1,6 @@
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+﻿import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import path from "node:path";
 
 import { RoleCode } from "@financial-system/types";
@@ -105,6 +106,65 @@ export class AttachmentsService {
     };
   }
 
+  async getFileByAccessToken(attachmentId: string, token: string) {
+    const attachment = await this.prisma.attachment.findUnique({
+      where: { id: attachmentId }
+    });
+
+    if (!attachment) {
+      throw new NotFoundException("附件不存在");
+    }
+
+    if (!this.verifyAccessToken(attachmentId, token)) {
+      throw new ForbiddenException("附件访问链接无效或已过期");
+    }
+
+    const file = await this.storageService.readObject(attachment.storageKey);
+
+    return {
+      fileName: attachment.fileName,
+      fileType: attachment.fileType || file.contentType,
+      buffer: file.buffer
+    };
+  }
+
+  buildPreviewAccessUrl(attachmentId: string) {
+    const apiUrl = this.configService.get<string>("API_URL", "http://localhost:3001");
+    const token = this.createAccessToken(attachmentId);
+    return `${apiUrl}/attachments/public/${attachmentId}?token=${encodeURIComponent(token)}`;
+  }
+
+  private createAccessToken(attachmentId: string) {
+    const expiresAt = Date.now() + 1000 * 60 * 60 * 24 * 365;
+    const payload = `${attachmentId}.${expiresAt}`;
+    const signature = this.sign(payload);
+    return `${expiresAt}.${signature}`;
+  }
+
+  private verifyAccessToken(attachmentId: string, token: string) {
+    const [expiresAtRaw, signature] = token.split(".");
+    const expiresAt = Number(expiresAtRaw);
+
+    if (!Number.isFinite(expiresAt) || !signature || Date.now() > expiresAt) {
+      return false;
+    }
+
+    const expected = this.sign(`${attachmentId}.${expiresAt}`);
+    const expectedBuffer = Buffer.from(expected, "hex");
+    const receivedBuffer = Buffer.from(signature, "hex");
+
+    if (expectedBuffer.length !== receivedBuffer.length) {
+      return false;
+    }
+
+    return timingSafeEqual(expectedBuffer, receivedBuffer);
+  }
+
+  private sign(value: string) {
+    const secret = this.configService.get<string>("ATTACHMENT_LINK_SECRET") || this.configService.get<string>("JWT_SECRET", "dev-secret");
+    return createHmac("sha256", secret).update(value).digest("hex");
+  }
+
   private serializeAttachment(attachment: {
     id: string;
     fileName: string;
@@ -124,4 +184,3 @@ export class AttachmentsService {
     };
   }
 }
-

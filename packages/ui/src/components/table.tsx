@@ -1,4 +1,4 @@
-import * as React from "react";
+﻿import * as React from "react";
 
 import { cn } from "../lib/cn";
 
@@ -11,7 +11,7 @@ export function TableHead({ className, ...props }: React.HTMLAttributes<HTMLTabl
 }
 
 export function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <tbody className={cn("divide-y divide-slate-900/6", className)} {...props} />;
+  return <tbody className={cn("divide-y divide-[rgba(15,23,42,0.06)]", className)} {...props} />;
 }
 
 export function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) {
@@ -23,5 +23,6 @@ export function TableHeader({ className, ...props }: React.ThHTMLAttributes<HTML
 }
 
 export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
-  return <td className={cn("px-4 py-3 align-top text-slate-700", className)} {...props} />;
+  return <td className={cn("px-4 py-3 align-middle text-slate-700", className)} {...props} />;
 }
+

@@ -270,3 +270,36 @@ npm run build
 2. 规则引擎抽象
 3. 导出与附件的异步任务化
 4. 更完整的 E2E 回归测试
+
+## 最新变更（2026-04-07）
+
+### 管理端配置项支持编辑与停用
+
+- 页面：`/admin/categories/expense`、`/admin/categories/purchase`、`/admin/rules`
+- 能力：新增行级编辑、状态展示（启用中/已停用）、启停开关
+- 约束：不支持删除，停用仅修改 `enabled=false`
+- 字段锁定：分类 `code` / `extensionType` 不可编辑，规则关联分类在编辑态锁定
+
+### 员工端新建报销隐藏停用项
+
+- 员工端创建报销时，分类和采购分类仅展示 `enabled=true` 项。
+
+### Excel 导出支持发票预览
+
+- “报销明细”sheet 新增 `发票预览` 列。
+- 图片发票直接嵌入。
+- PDF 发票按页转图片后嵌入。
+- 预览图可点击，跳转后端稳定附件访问地址（不暴露存储层 URL）。
+- PDF 转图失败不阻断导出，自动降级为可点击文本链接。
+
+### PDF 转图依赖
+
+导出 PDF 发票预览依赖 Python + PyMuPDF：
+
+```bash
+pip install pymupdf
+```
+
+脚本路径：`apps/api/scripts/pdf_to_png.py`
+
+更多细节见变更日志：`docs/change-log.md`

@@ -49,3 +49,25 @@ pip install pymupdf
 ```
 
 - 转图脚本位置：`apps/api/scripts/pdf_to_png.py`
+
+## 2026-04-08
+
+### 管理端配置页：编辑与停用 UI 重做
+
+- 报销分类、采购分类、规则管理三页统一为“列表 + 右侧编辑面板”布局。
+- 编辑态补充状态卡片与启停开关，不再使用简单复选框堆叠。
+- 锁定字段继续保留只读展示，避免误改 code、extensionType、规则关联分类。
+
+### Excel 发票预览：版式收敛与 PDF 转图兜底
+
+- 报销明细 sheet 的 发票预览 列改为固定可读尺寸，不再追求铺满单元格。
+- 预览图区增加留白，优先保证整张表的可读性。
+- PDF 转图执行链新增 conda run -n financial-system python 兜底，再回退到 python / py -3。
+- 单页转换失败仍按文本链接降级，不阻断整份导出。
+
+### 本地运行验证
+
+- 
+pm run build 已通过。
+- 本地服务验证时，Web 改为基于已构建产物启动，避免 
+ext dev 在 Windows 下出现 .next 清理后的 manifest 抖动问题。

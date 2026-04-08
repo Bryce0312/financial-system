@@ -1,4 +1,4 @@
-ï»¿import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import ExcelJS from "exceljs";
 import { existsSync } from "node:fs";
 import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
@@ -23,6 +23,11 @@ type PreviewAsset = {
   extension?: "png" | "jpeg";
   label?: string;
 };
+
+const PREVIEW_COLUMN_WIDTH = 34;
+const PREVIEW_IMAGE_WIDTH = 220;
+const PREVIEW_IMAGE_HEIGHT = 140;
+const PREVIEW_ROW_HEIGHT = 112;
 
 @Injectable()
 export class ExportsService {
@@ -51,7 +56,7 @@ export class ExportsService {
   async getJob(id: string) {
     const job = await this.prisma.exportJob.findUnique({ where: { id } });
     if (!job) {
-      throw new NotFoundException("å¯¼å‡ºä»»åŠ¡ä¸å­˜åœ¨");
+      throw new NotFoundException("µ¼³öÈÎÎñ²»´æÔÚ");
     }
 
     return {
@@ -68,7 +73,7 @@ export class ExportsService {
   async download(id: string) {
     const job = await this.prisma.exportJob.findUnique({ where: { id } });
     if (!job || !job.storageKey) {
-      throw new NotFoundException("å¯¼å‡ºæ–‡ä»¶ä¸å­˜åœ¨");
+      throw new NotFoundException("µ¼³öÎÄ¼ş²»´æÔÚ");
     }
 
     return this.storageService.readObject(job.storageKey);
@@ -101,7 +106,7 @@ export class ExportsService {
         where: { id },
         data: {
           status: ExportJobStatus.FAILED,
-          errorMessage: error instanceof Error ? error.message : "å¯¼å‡ºå¤±è´¥",
+          errorMessage: error instanceof Error ? error.message : "µ¼³öÊ§°Ü",
           completedAt: new Date()
         }
       });
@@ -149,8 +154,8 @@ export class ExportsService {
   }
 
   private async buildDetailSheet(workbook: ExcelJS.Workbook, reports: Awaited<ReturnType<ExportsService["loadReports"]>>) {
-    const sheet = workbook.addWorksheet("æŠ¥é”€æ˜ç»†");
-    const header = ["åºå·", "æŠ¥é”€æ ‡é¢˜", "ç”³è¯·äºº", "æŠ¥é”€ç±»åˆ«", "é‡‘é¢", "æ—¥æœŸ", "æ˜¯å¦æœ‰å‘ç¥¨", "æ˜¯å¦è¶…é¢", "è¶…é¢é‡‘é¢", "çŠ¶æ€", "å¤‡æ³¨", "åˆ›å»ºæ—¶é—´", "å‘ç¥¨é¢„è§ˆ"];
+    const sheet = workbook.addWorksheet("±¨ÏúÃ÷Ï¸");
+    const header = ["ĞòºÅ", "±¨Ïú±êÌâ", "ÉêÇëÈË", "±¨ÏúÀà±ğ", "½ğ¶î", "ÈÕÆÚ", "ÊÇ·ñÓĞ·¢Æ±", "ÊÇ·ñ³¬¶î", "³¬¶î½ğ¶î", "×´Ì¬", "±¸×¢", "´´½¨Ê±¼ä", "·¢Æ±Ô¤ÀÀ"];
     sheet.addRow(header);
     sheet.getRow(1).font = { bold: true };
 
@@ -168,7 +173,7 @@ export class ExportsService {
       { width: 12 },
       { width: 18 },
       { width: 24 },
-      { width: 56 }
+      { width: PREVIEW_COLUMN_WIDTH }
     ];
 
     let rowIndex = 2;
@@ -189,8 +194,8 @@ export class ExportsService {
             report.category.name,
             decimalToNumber(report.amountTotal),
             report.expenseDate.toISOString().slice(0, 10),
-            report.hasInvoice ? "æœ‰" : "æ— ",
-            report.isOverLimit ? "æ˜¯" : "å¦",
+            report.hasInvoice ? "ÓĞ" : "ÎŞ",
+            report.isOverLimit ? "ÊÇ" : "·ñ",
             decimalToNumber(report.overLimitAmount),
             report.status,
             report.remark || "",
@@ -204,19 +209,20 @@ export class ExportsService {
           const imageId = workbook.addImage({ base64: preview.buffer.toString("base64"), extension: preview.extension });
 
           sheet.addImage(imageId, {
-            tl: { col: previewColumn - 1 + 0.04, row: rowIndex + offset - 1 + 0.04 },
-            ext: { width: 350, height: 215 },
+            tl: { col: previewColumn - 1 + 0.16, row: rowIndex + offset - 1 + 0.12 },
+            ext: { width: PREVIEW_IMAGE_WIDTH, height: PREVIEW_IMAGE_HEIGHT },
             editAs: "oneCell",
             hyperlinks: {
               hyperlink: preview.link,
-              tooltip: "æ‰“å¼€åŸå§‹é™„ä»¶"
+              tooltip: "´ò¿ªÔ­Ê¼¸½¼ş"
             }
           });
-          row.height = 165;
+          row.height = PREVIEW_ROW_HEIGHT;
         } else if (preview?.link) {
           const cell = sheet.getCell(rowIndex + offset, previewColumn);
-          cell.value = { text: preview.label || "æŸ¥çœ‹å‘ç¥¨", hyperlink: preview.link };
-          cell.font = { color: { argb: "FF1D4ED8" }, underline: true };
+          cell.value = { text: preview.label || "²é¿´·¢Æ±", hyperlink: preview.link };
+          cell.font = { color: { argb: "FF1D4ED8" }, underline: true, bold: true };
+          cell.alignment = { vertical: "middle", horizontal: "left", wrapText: true };
         }
       }
 
@@ -255,14 +261,14 @@ export class ExportsService {
           }
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
-          this.logger.warn(`PDF è½¬å›¾ç‰‡å¤±è´¥ attachment=${attachment.id}: ${message}`);
+          this.logger.warn(`PDF ×ªÍ¼Æ¬Ê§°Ü attachment=${attachment.id}: ${message}`);
         }
 
-        assets.push({ link, label: "æŸ¥çœ‹ PDF å‘ç¥¨" });
+        assets.push({ link, label: "²é¿´ PDF ·¢Æ±" });
         continue;
       }
 
-      assets.push({ link, label: "æŸ¥çœ‹é™„ä»¶" });
+      assets.push({ link, label: "²é¿´¸½¼ş" });
     }
 
     return assets;
@@ -299,7 +305,7 @@ export class ExportsService {
 
     const scriptPath = candidates.find((candidate) => existsSync(candidate));
     if (!scriptPath) {
-      throw new Error("æœªæ‰¾åˆ° PDF è½¬å›¾è„šæœ¬ scripts/pdf_to_png.py");
+      throw new Error("Î´ÕÒµ½ PDF ×ªÍ¼½Å±¾ scripts/pdf_to_png.py");
     }
 
     return scriptPath;
@@ -307,6 +313,7 @@ export class ExportsService {
 
   private async runPythonScript(scriptPath: string, args: string[]) {
     const commands: Array<{ command: string; args: string[] }> = [
+      { command: "conda", args: ["run", "-n", "financial-system", "python", scriptPath, ...args] },
       { command: "python", args: [scriptPath, ...args] },
       { command: "py", args: ["-3", scriptPath, ...args] }
     ];
@@ -339,7 +346,7 @@ export class ExportsService {
       }
     }
 
-    throw lastError || new Error("æ— æ³•æ‰§è¡Œ PDF è½¬å›¾è„šæœ¬");
+    throw lastError || new Error("ÎŞ·¨Ö´ĞĞ PDF ×ªÍ¼½Å±¾");
   }
 
   private detectImageExtension(fileType: string, fileName: string): "png" | "jpeg" {
@@ -364,8 +371,8 @@ export class ExportsService {
   }
 
   private buildCategorySheet(workbook: ExcelJS.Workbook, reports: Awaited<ReturnType<ExportsService["loadReports"]>>) {
-    const sheet = workbook.addWorksheet("åˆ†ç±»æ±‡æ€»");
-    sheet.addRow(["æŠ¥é”€ç±»åˆ«", "æŠ¥é”€ç¬”æ•°", "æ€»é‡‘é¢", "è¶…é¢ç¬”æ•°", "è¶…é¢é‡‘é¢"]);
+    const sheet = workbook.addWorksheet("·ÖÀà»ã×Ü");
+    sheet.addRow(["±¨ÏúÀà±ğ", "±¨Ïú±ÊÊı", "×Ü½ğ¶î", "³¬¶î±ÊÊı", "³¬¶î½ğ¶î"]);
     const map = new Map<string, { count: number; amount: number; overCount: number; overAmount: number; name: string }>();
     for (const report of reports) {
       const current = map.get(report.categoryId) ?? { count: 0, amount: 0, overCount: 0, overAmount: 0, name: report.category.name };
@@ -381,8 +388,8 @@ export class ExportsService {
   }
 
   private buildEmployeeSheet(workbook: ExcelJS.Workbook, reports: Awaited<ReturnType<ExportsService["loadReports"]>>) {
-    const sheet = workbook.addWorksheet("å‘˜å·¥æ±‡æ€»");
-    sheet.addRow(["å‘˜å·¥å§“å", "æŠ¥é”€ç¬”æ•°", "æ€»é‡‘é¢", "è¶…é¢ç¬”æ•°", "è¶…é¢é‡‘é¢"]);
+    const sheet = workbook.addWorksheet("Ô±¹¤»ã×Ü");
+    sheet.addRow(["Ô±¹¤ĞÕÃû", "±¨Ïú±ÊÊı", "×Ü½ğ¶î", "³¬¶î±ÊÊı", "³¬¶î½ğ¶î"]);
     const map = new Map<string, { count: number; amount: number; overCount: number; overAmount: number; name: string }>();
     for (const report of reports) {
       const current = map.get(report.userId) ?? { count: 0, amount: 0, overCount: 0, overAmount: 0, name: report.user.realName };
@@ -398,8 +405,8 @@ export class ExportsService {
   }
 
   private buildPurchaseSheet(workbook: ExcelJS.Workbook, reports: Awaited<ReturnType<ExportsService["loadReports"]>>) {
-    const sheet = workbook.addWorksheet("é‡‡è´­æ˜ç»†");
-    sheet.addRow(["åºå·", "å•†å“åç§°", "é‡‡è´­åˆ†ç±»", "é‡‡è´­äºº", "ä½¿ç”¨äºº", "å•ä»·", "æ•°é‡", "é‚®è´¹", "æ€»ä»·", "é‡‡è´­å¹³å°", "å‘ç¥¨", "å¤‡æ³¨"]);
+    const sheet = workbook.addWorksheet("²É¹ºÃ÷Ï¸");
+    sheet.addRow(["ĞòºÅ", "ÉÌÆ·Ãû³Æ", "²É¹º·ÖÀà", "²É¹ºÈË", "Ê¹ÓÃÈË", "µ¥¼Û", "ÊıÁ¿", "ÓÊ·Ñ", "×Ü¼Û", "²É¹ºÆ½Ì¨", "·¢Æ±", "±¸×¢"]);
     reports
       .filter((report) => report.purchaseDetail)
       .forEach((report, index) => {
@@ -415,15 +422,15 @@ export class ExportsService {
           decimalToNumber(detail.shippingFee),
           decimalToNumber(report.amountTotal),
           detail.platform || "",
-          report.hasInvoice ? "æœ‰" : "æ— ",
+          report.hasInvoice ? "ÓĞ" : "ÎŞ",
           report.remark || detail.productNote || ""
         ]);
       });
   }
 
   private buildAnomalySheet(workbook: ExcelJS.Workbook, reports: Awaited<ReturnType<ExportsService["loadReports"]>>) {
-    const sheet = workbook.addWorksheet("å¼‚å¸¸è®°å½•");
-    sheet.addRow(["åºå·", "æŠ¥é”€æ ‡é¢˜", "ç”³è¯·äºº", "æŠ¥é”€ç±»åˆ«", "é‡‘é¢", "å¼‚å¸¸ç±»å‹", "å¼‚å¸¸è¯´æ˜", "æ˜¯å¦è¶…é¢", "è¶…é¢é‡‘é¢"]);
+    const sheet = workbook.addWorksheet("Òì³£¼ÇÂ¼");
+    sheet.addRow(["ĞòºÅ", "±¨Ïú±êÌâ", "ÉêÇëÈË", "±¨ÏúÀà±ğ", "½ğ¶î", "Òì³£ÀàĞÍ", "Òì³£ËµÃ÷", "ÊÇ·ñ³¬¶î", "³¬¶î½ğ¶î"]);
     let rowIndex = 1;
     reports.forEach((report) => {
       report.anomalies.forEach((anomaly) => {
@@ -435,7 +442,7 @@ export class ExportsService {
           decimalToNumber(report.amountTotal),
           anomaly.anomalyType,
           anomaly.anomalyMessage,
-          report.isOverLimit ? "æ˜¯" : "å¦",
+          report.isOverLimit ? "ÊÇ" : "·ñ",
           decimalToNumber(report.overLimitAmount)
         ]);
         rowIndex += 1;
@@ -443,6 +450,9 @@ export class ExportsService {
     });
   }
 }
+
+
+
 
 
 

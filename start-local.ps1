@@ -1,9 +1,10 @@
 $ErrorActionPreference = "Stop"
-$normalizedPath = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
-if ($normalizedPath) {
-$env:Path = $normalizedPath
+$machinePath = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
+$userPath = [System.Environment]::GetEnvironmentVariable("Path", "User")
+$combinedPath = @($machinePath, $userPath) | Where-Object { $_ } | Select-Object -Unique
+if ($combinedPath) {
+  $env:Path = ($combinedPath -join ";")
 }
-Remove-Item Env:PATH -ErrorAction SilentlyContinue
 
 
 function Write-Step {

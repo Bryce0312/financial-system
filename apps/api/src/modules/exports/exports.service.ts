@@ -2,18 +2,18 @@ import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import ExcelJS from "exceljs";
 import { existsSync } from "node:fs";
 import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
-import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
+import { join, resolve } from "node:path";
 import { homedir, tmpdir } from "node:os";
 
 import { ExportJobStatus, type ExportRequest } from "@financial-system/types";
 
-import { StorageService } from "@/common/storage/storage.service";
+import { AttachmentsService } from "@/modules/attachments/attachments.service";
 import { AuthenticatedUser } from "@/common/interfaces/authenticated-user.interface";
+import { StorageService } from "@/common/storage/storage.service";
 import { getMonthRange } from "@/common/utils/date-range";
 import { decimalToNumber } from "@/common/utils/number";
 import { PrismaService } from "@/prisma/prisma.service";
-import { AttachmentsService } from "@/modules/attachments/attachments.service";
 
 type ReportItem = Awaited<ReturnType<ExportsService["loadReports"]>>[number];
 
@@ -56,7 +56,7 @@ export class ExportsService {
   async getJob(id: string) {
     const job = await this.prisma.exportJob.findUnique({ where: { id } });
     if (!job) {
-      throw new NotFoundException("�������񲻴���");
+      throw new NotFoundException("导出任务不存在");
     }
 
     return {
@@ -73,7 +73,7 @@ export class ExportsService {
   async download(id: string) {
     const job = await this.prisma.exportJob.findUnique({ where: { id } });
     if (!job || !job.storageKey) {
-      throw new NotFoundException("�����ļ�������");
+      throw new NotFoundException("导出文件不存在");
     }
 
     return this.storageService.readObject(job.storageKey);
@@ -106,7 +106,7 @@ export class ExportsService {
         where: { id },
         data: {
           status: ExportJobStatus.FAILED,
-          errorMessage: error instanceof Error ? error.message : "����ʧ��",
+          errorMessage: error instanceof Error ? error.message : "导出失败",
           completedAt: new Date()
         }
       });
@@ -154,10 +154,10 @@ export class ExportsService {
   }
 
   private async buildDetailSheet(workbook: ExcelJS.Workbook, reports: Awaited<ReturnType<ExportsService["loadReports"]>>) {
-    const sheet = workbook.addWorksheet("������ϸ");
-    const header = ["���", "��������", "������", "�������", "���", "����", "�Ƿ��з�Ʊ", "�Ƿ񳬶�", "������", "״̬", "��ע", "����ʱ��", "��ƱԤ��"];
+    const sheet = workbook.addWorksheet("报销明细");
+    const header = ["序号", "报销标题", "申请人", "报销类别", "金额", "日期", "是否有发票", "是否超额", "超额金额", "状态", "备注", "创建时间", "发票预览"];
     sheet.addRow(header);
-    sheet.getRow(1).font = { bold: true };
+    this.styleHeaderRow(sheet.getRow(1));
 
     const previewColumn = 13;
     sheet.columns = [
@@ -170,7 +170,7 @@ export class ExportsService {
       { width: 12 },
       { width: 10 },
       { width: 12 },
-      { width: 12 },
+      { width: 14 },
       { width: 18 },
       { width: 24 },
       { width: PREVIEW_COLUMN_WIDTH }
@@ -194,8 +194,8 @@ export class ExportsService {
             report.category.name,
             decimalToNumber(report.amountTotal),
             report.expenseDate.toISOString().slice(0, 10),
-            report.hasInvoice ? "��" : "��",
-            report.isOverLimit ? "��" : "��",
+            report.hasInvoice ? "有" : "无",
+            report.isOverLimit ? "是" : "否",
             decimalToNumber(report.overLimitAmount),
             report.status,
             report.remark || "",
@@ -204,30 +204,34 @@ export class ExportsService {
           ];
         }
 
+        row.alignment = { vertical: "middle" };
+
         const preview = previews[offset];
         if (preview?.buffer && preview.extension) {
           const imageId = workbook.addImage({ base64: preview.buffer.toString("base64"), extension: preview.extension });
 
           sheet.addImage(imageId, {
-            tl: { col: previewColumn - 1 + 0.16, row: rowIndex + offset - 1 + 0.12 },
+            tl: { col: previewColumn - 1 + 0.18, row: rowIndex + offset - 1 + 0.16 },
             ext: { width: PREVIEW_IMAGE_WIDTH, height: PREVIEW_IMAGE_HEIGHT },
             editAs: "oneCell",
             hyperlinks: {
               hyperlink: preview.link,
-              tooltip: "��ԭʼ����"
+              tooltip: "打开原始附件"
             }
           });
           row.height = PREVIEW_ROW_HEIGHT;
         } else if (preview?.link) {
           const cell = sheet.getCell(rowIndex + offset, previewColumn);
-          cell.value = { text: preview.label || "�鿴��Ʊ", hyperlink: preview.link };
+          cell.value = { text: preview.label || "查看发票", hyperlink: preview.link };
           cell.font = { color: { argb: "FF1D4ED8" }, underline: true, bold: true };
-          cell.alignment = { vertical: "middle", horizontal: "left", wrapText: true };
+          cell.alignment = { vertical: "middle", horizontal: "center", wrapText: true };
         }
       }
 
       rowIndex += rowSpan;
     }
+
+    this.styleDataRegion(sheet, previewColumn);
   }
 
   private async resolvePreviewAssets(report: ReportItem): Promise<PreviewAsset[]> {
@@ -261,14 +265,14 @@ export class ExportsService {
           }
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
-          this.logger.warn(`PDF תͼƬʧ�� attachment=${attachment.id}: ${message}`);
+          this.logger.warn(`PDF 转图片失败 attachment=${attachment.id}: ${message}`);
         }
 
-        assets.push({ link, label: "�鿴 PDF ��Ʊ" });
+        assets.push({ link, label: "查看 PDF 发票" });
         continue;
       }
 
-      assets.push({ link, label: "�鿴����" });
+      assets.push({ link, label: "查看附件" });
     }
 
     return assets;
@@ -305,7 +309,7 @@ export class ExportsService {
 
     const scriptPath = candidates.find((candidate) => existsSync(candidate));
     if (!scriptPath) {
-      throw new Error("δ�ҵ� PDF תͼ�ű� scripts/pdf_to_png.py");
+      throw new Error("未找到 PDF 转图脚本 scripts/pdf_to_png.py");
     }
 
     return scriptPath;
@@ -347,7 +351,7 @@ export class ExportsService {
       }
     }
 
-    throw lastError || new Error("�޷�ִ�� PDF תͼ�ű�");
+    throw lastError || new Error("无法执行 PDF 转图脚本");
   }
 
   private detectImageExtension(fileType: string, fileName: string): "png" | "jpeg" {
@@ -372,8 +376,9 @@ export class ExportsService {
   }
 
   private buildCategorySheet(workbook: ExcelJS.Workbook, reports: Awaited<ReturnType<ExportsService["loadReports"]>>) {
-    const sheet = workbook.addWorksheet("�������");
-    sheet.addRow(["�������", "��������", "�ܽ��", "�������", "������"]);
+    const sheet = workbook.addWorksheet("分类汇总");
+    sheet.addRow(["报销类别", "报销笔数", "总金额", "超额笔数", "超额金额"]);
+    this.styleHeaderRow(sheet.getRow(1));
     const map = new Map<string, { count: number; amount: number; overCount: number; overAmount: number; name: string }>();
     for (const report of reports) {
       const current = map.get(report.categoryId) ?? { count: 0, amount: 0, overCount: 0, overAmount: 0, name: report.category.name };
@@ -386,11 +391,13 @@ export class ExportsService {
       map.set(report.categoryId, current);
     }
     Array.from(map.values()).forEach((item) => sheet.addRow([item.name, item.count, item.amount, item.overCount, item.overAmount]));
+    this.styleDataRegion(sheet);
   }
 
   private buildEmployeeSheet(workbook: ExcelJS.Workbook, reports: Awaited<ReturnType<ExportsService["loadReports"]>>) {
-    const sheet = workbook.addWorksheet("Ա������");
-    sheet.addRow(["Ա������", "��������", "�ܽ��", "�������", "������"]);
+    const sheet = workbook.addWorksheet("员工汇总");
+    sheet.addRow(["员工姓名", "报销笔数", "总金额", "超额笔数", "超额金额"]);
+    this.styleHeaderRow(sheet.getRow(1));
     const map = new Map<string, { count: number; amount: number; overCount: number; overAmount: number; name: string }>();
     for (const report of reports) {
       const current = map.get(report.userId) ?? { count: 0, amount: 0, overCount: 0, overAmount: 0, name: report.user.realName };
@@ -403,11 +410,13 @@ export class ExportsService {
       map.set(report.userId, current);
     }
     Array.from(map.values()).forEach((item) => sheet.addRow([item.name, item.count, item.amount, item.overCount, item.overAmount]));
+    this.styleDataRegion(sheet);
   }
 
   private buildPurchaseSheet(workbook: ExcelJS.Workbook, reports: Awaited<ReturnType<ExportsService["loadReports"]>>) {
-    const sheet = workbook.addWorksheet("�ɹ���ϸ");
-    sheet.addRow(["���", "��Ʒ����", "�ɹ�����", "�ɹ���", "ʹ����", "����", "����", "�ʷ�", "�ܼ�", "�ɹ�ƽ̨", "��Ʊ", "��ע"]);
+    const sheet = workbook.addWorksheet("采购明细");
+    sheet.addRow(["序号", "商品名称", "采购分类", "采购人", "使用人", "单价", "数量", "邮费", "总价", "采购平台", "发票", "备注"]);
+    this.styleHeaderRow(sheet.getRow(1));
     reports
       .filter((report) => report.purchaseDetail)
       .forEach((report, index) => {
@@ -423,15 +432,17 @@ export class ExportsService {
           decimalToNumber(detail.shippingFee),
           decimalToNumber(report.amountTotal),
           detail.platform || "",
-          report.hasInvoice ? "��" : "��",
+          report.hasInvoice ? "有" : "无",
           report.remark || detail.productNote || ""
         ]);
       });
+    this.styleDataRegion(sheet);
   }
 
   private buildAnomalySheet(workbook: ExcelJS.Workbook, reports: Awaited<ReturnType<ExportsService["loadReports"]>>) {
-    const sheet = workbook.addWorksheet("�쳣��¼");
-    sheet.addRow(["���", "��������", "������", "�������", "���", "�쳣����", "�쳣˵��", "�Ƿ񳬶�", "������"]);
+    const sheet = workbook.addWorksheet("异常记录");
+    sheet.addRow(["序号", "报销标题", "申请人", "报销类别", "金额", "异常类型", "异常说明", "是否超额", "超额金额"]);
+    this.styleHeaderRow(sheet.getRow(1));
     let rowIndex = 1;
     reports.forEach((report) => {
       report.anomalies.forEach((anomaly) => {
@@ -443,18 +454,39 @@ export class ExportsService {
           decimalToNumber(report.amountTotal),
           anomaly.anomalyType,
           anomaly.anomalyMessage,
-          report.isOverLimit ? "��" : "��",
+          report.isOverLimit ? "是" : "否",
           decimalToNumber(report.overLimitAmount)
         ]);
         rowIndex += 1;
       });
     });
+    this.styleDataRegion(sheet);
+  }
+
+  private styleHeaderRow(row: ExcelJS.Row) {
+    row.font = { bold: true };
+    row.alignment = { vertical: "middle", horizontal: "center", wrapText: true };
+    row.height = 24;
+  }
+
+  private styleDataRegion(sheet: ExcelJS.Worksheet, skipColumn?: number) {
+    sheet.eachRow((row, rowNumber) => {
+      if (rowNumber === 1) {
+        return;
+      }
+
+      row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+        if (skipColumn && colNumber === skipColumn && row.height && row.height >= PREVIEW_ROW_HEIGHT) {
+          return;
+        }
+
+        cell.alignment = {
+          ...(cell.alignment ?? {}),
+          vertical: "middle",
+          horizontal: colNumber === 1 ? "center" : cell.alignment?.horizontal,
+          wrapText: true
+        };
+      });
+    });
   }
 }
-
-
-
-
-
-
-

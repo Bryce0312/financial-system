@@ -2557,3 +2557,164 @@ main {
   border-radius: 24px;
   background: linear-gradient(180deg, rgba(255, 252, 247, 0.9) 0%, rgba(255, 255, 255, 0.96) 100%);
 }
+
+.admin-config-layout {
+  min-width: 0;
+}
+
+.admin-config-grid {
+  align-items: start;
+}
+
+.admin-config-card {
+  border: 2px solid rgba(219, 214, 229, 0.92) !important;
+  border-radius: 30px !important;
+  background: linear-gradient(180deg, rgba(255, 252, 247, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
+  box-shadow: 0 18px 42px rgba(91, 83, 111, 0.08) !important;
+  overflow: hidden;
+}
+
+.admin-config-cardHeader {
+  border-bottom-color: rgba(236, 231, 245, 0.94) !important;
+}
+
+.admin-config-stats {
+  align-items: stretch;
+}
+
+.admin-config-statChip {
+  min-width: 84px;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.admin-config-statChip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(201, 193, 215, 0.92) !important;
+  box-shadow: 0 12px 24px rgba(123, 114, 144, 0.08) !important;
+}
+
+.admin-config-tableCard .admin-config-tableContent {
+  padding-top: 20px;
+}
+
+.admin-config-tableScroll {
+  min-width: 0;
+}
+
+.admin-config-tableCard table {
+  width: 100%;
+}
+
+.admin-config-tableCard thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fff9e8;
+}
+
+.admin-config-tableCard tbody td {
+  vertical-align: middle;
+}
+
+.admin-config-tableCard tbody tr {
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.admin-config-tableCard tbody tr:hover {
+  background: rgba(250, 247, 252, 0.88);
+}
+
+.admin-config-editorCard {
+  min-width: 0;
+}
+
+.admin-config-editorContent {
+  min-width: 0;
+}
+
+.admin-config-field :is(input, select, textarea) {
+  border-radius: 18px !important;
+  border-color: rgba(219, 214, 229, 0.95) !important;
+}
+
+.admin-config-field :is(input, select, textarea):focus {
+  border-color: rgba(153, 140, 181, 0.96) !important;
+  box-shadow: 0 0 0 4px rgba(216, 211, 231, 0.35) !important;
+}
+
+.admin-config-statusCard {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.admin-config-statusCard:hover,
+.admin-config-statusCard:focus-within {
+  transform: translateY(-1px);
+  border-color: rgba(201, 193, 215, 0.94) !important;
+  box-shadow: 0 14px 28px rgba(123, 114, 144, 0.08) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+}
+
+.admin-config-toggle {
+  outline: none;
+}
+
+.admin-config-toggle:focus-visible {
+  box-shadow: 0 0 0 4px rgba(216, 211, 231, 0.38) !important;
+}
+
+.admin-config-actionBar {
+  padding-top: 8px;
+}
+
+.admin-config-actionButton {
+  min-height: 50px;
+}
+
+@media (min-width: 1280px) {
+  .admin-config-grid {
+    grid-template-columns: minmax(0, 1fr) 400px;
+  }
+
+  .admin-config-tableCard,
+  .admin-config-editorCard {
+    height: min(calc(100vh - 230px), 880px);
+  }
+
+  .admin-config-tableCard {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .admin-config-tableCard .admin-config-tableContent {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .admin-config-tableScroll {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding-right: 4px;
+  }
+
+  .admin-config-editorCard {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .admin-config-editorContent {
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 24px;
+  }
+}
+
+@media (max-width: 1279px) {
+  .admin-config-layout__actions {
+    width: 100%;
+  }
+
+  .admin-config-layout__actions > * {
+    width: 100%;
+  }
+}

@@ -1,11 +1,7 @@
-$ErrorActionPreference = "Stop"
-$machinePath = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
-$userPath = [System.Environment]::GetEnvironmentVariable("Path", "User")
-$combinedPath = @($machinePath, $userPath) | Where-Object { $_ } | Select-Object -Unique
-if ($combinedPath) {
-  $env:Path = ($combinedPath -join ";")
-}
-
+﻿$ErrorActionPreference = "Stop"
+$machinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+$env:Path = (($machinePath, $userPath) | Where-Object { $_ } | Select-Object -Unique) -join ";"
 
 function Write-Step {
   param([string]$Message)
@@ -34,15 +30,55 @@ function Wait-ForPort {
   return $false
 }
 
-function Resolve-RequiredCommand {
-  param([string]$Name)
+function Get-ListeningPids {
+  param([int]$Port)
 
-  $command = Get-Command $Name -ErrorAction SilentlyContinue
-  if (-not $command) {
-    throw "Required command not found: $Name"
+  $lines = netstat -ano | Select-String ":$Port"
+  $pids = @()
+  foreach ($line in $lines) {
+    $text = ($line.ToString() -replace '\s+', ' ').Trim()
+    if ($text -match '^TCP .*LISTENING (\d+)$') {
+      $pids += [int]$matches[1]
+    }
   }
 
-  return $command.Source
+  return $pids | Select-Object -Unique
+}
+
+function Stop-PortProcess {
+  param([int]$Port)
+
+  $pids = Get-ListeningPids -Port $Port
+  foreach ($pid in $pids) {
+    try {
+      Stop-Process -Id $pid -Force -ErrorAction Stop
+    }
+    catch {
+      Write-Host ("Failed to stop process {0} on port {1}: {2}" -f $pid, $Port, $_.Exception.Message) -ForegroundColor Yellow
+    }
+  }
+}
+
+function Test-Http200 {
+  param(
+    [string]$Url,
+    [int]$TimeoutSeconds = 20
+  )
+
+  $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+  while ((Get-Date) -lt $deadline) {
+    try {
+      $resp = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 5
+      if ($resp.StatusCode -eq 200) {
+        return $true
+      }
+    }
+    catch {
+    }
+    Start-Sleep -Milliseconds 700
+  }
+
+  return $false
 }
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -60,22 +96,22 @@ New-Item -ItemType Directory -Force -Path $logsDir | Out-Null
 
 $nodePath = "C:\Program Files\nodejs\node.exe"
 $postgresPath = Join-Path $env:USERPROFILE ".conda\envs\financial-system\Library\bin\postgres.exe"
+$nextPath = Join-Path $root "node_modules\next\dist\bin\next"
 
 if (-not (Test-Path $postgresPath)) {
   throw "PostgreSQL executable not found at $postgresPath"
+}
+if (-not (Test-Path $nodePath)) {
+  throw "Node executable not found at $nodePath"
+}
+if (-not (Test-Path $nextPath)) {
+  throw "Next.js executable not found at $nextPath"
 }
 
 Write-Step "Checking PostgreSQL"
 if (-not (Test-PortListening -Port 5432)) {
   if (Test-Path $postgresPidPath) {
-    $pidLines = Get-Content -LiteralPath $postgresPidPath -ErrorAction SilentlyContinue
-    if ($pidLines.Count -gt 0) {
-      $oldPid = 0
-      [void][int]::TryParse($pidLines[0], [ref]$oldPid)
-      if ($oldPid -gt 0 -and -not (Get-Process -Id $oldPid -ErrorAction SilentlyContinue)) {
-        Remove-Item -LiteralPath $postgresPidPath -Force
-      }
-    }
+    Remove-Item -LiteralPath $postgresPidPath -Force -ErrorAction SilentlyContinue
   }
 
   Start-Process -FilePath $postgresPath -ArgumentList "-D", $postgresDataDir, "-p", "5432" -RedirectStandardOutput $postgresStdOut -RedirectStandardError $postgresStdErr | Out-Null
@@ -97,27 +133,43 @@ if (-not (Test-PortListening -Port 3001)) {
 Write-Host "API ready on 3001" -ForegroundColor Green
 
 Write-Step "Checking Web"
-if (-not (Test-PortListening -Port 3000)) {
-  $webWorkingDirectory = Join-Path $root "apps\web"
-  $webCacheDir = Join-Path $webWorkingDirectory ".next"
-  if (Test-Path $webCacheDir) {
-    Remove-Item -LiteralPath $webCacheDir -Recurse -Force -ErrorAction SilentlyContinue
+$webWorkingDirectory = Join-Path $root "apps\web"
+$webBuildDir = Join-Path $webWorkingDirectory ".next"
+
+$webHealthy = $false
+if (Test-PortListening -Port 3000) {
+  $webHealthy = Test-Http200 -Url "http://127.0.0.1:3000/login" -TimeoutSeconds 6
+  if (-not $webHealthy) {
+    Stop-PortProcess -Port 3000
+    Start-Sleep -Seconds 1
+  }
+}
+
+if (-not $webHealthy) {
+  if (Test-Path $webBuildDir) {
+    Remove-Item -LiteralPath $webBuildDir -Recurse -Force -ErrorAction SilentlyContinue
   }
 
-  $nextPath = Join-Path $root "node_modules\next\dist\bin\next"
-  $nextBuildDir = Join-Path $webWorkingDirectory ".next"
-  if (-not (Test-Path $nextPath)) {
-    throw "Next.js executable not found at $nextPath"
+  Push-Location $webWorkingDirectory
+  try {
+    & $nodePath $nextPath build 2>&1 | Tee-Object -FilePath $webOut
+    if ($LASTEXITCODE -ne 0) {
+      throw "Web build failed. Check $webOut"
+    }
+  }
+  finally {
+    Pop-Location
   }
 
-  if (Test-Path $nextBuildDir) {
-    Remove-Item -LiteralPath $nextBuildDir -Recurse -Force -ErrorAction SilentlyContinue
-  }
-
-  Start-Process -FilePath $nodePath -WorkingDirectory $webWorkingDirectory -ArgumentList $nextPath, "dev", "-H", "0.0.0.0", "-p", "3000" -RedirectStandardOutput $webOut -RedirectStandardError $webErr | Out-Null
+  Start-Process -FilePath $nodePath -WorkingDirectory $webWorkingDirectory -ArgumentList $nextPath, "start", "-H", "0.0.0.0", "-p", "3000" -RedirectStandardOutput $webOut -RedirectStandardError $webErr | Out-Null
 
   if (-not (Wait-ForPort -Port 3000 -TimeoutSeconds 30)) {
     throw "Web server did not start on port 3000. Check $webErr"
+  }
+
+  if (-not (Test-Http200 -Url "http://127.0.0.1:3000/login" -TimeoutSeconds 20)) {
+    Stop-PortProcess -Port 3000
+    throw "Web health check failed on /login. Check $webErr"
   }
 }
 Write-Host "Web ready on 3000" -ForegroundColor Green
@@ -134,5 +186,3 @@ Write-Host "  API stdout         $apiOut"
 Write-Host "  API stderr         $apiErr"
 Write-Host "  Web stdout         $webOut"
 Write-Host "  Web stderr         $webErr"
-
-

@@ -55,7 +55,7 @@ export function ConfigPageLayout({
       <div className="admin-config-layout__head flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div className="admin-config-layout__copy space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">Admin config</p>
-          <div className="space-y-2">
+          <div className="space-y-2 xl:max-w-[34rem]">
             <h1 className="text-[36px] font-black tracking-[-0.06em] text-slate-950 xl:text-[40px]">{title}</h1>
             <p className="max-w-3xl text-sm leading-7 text-slate-500">{description}</p>
           </div>
@@ -84,13 +84,13 @@ export function ConfigTableCard({
 }) {
   return (
     <Card className="admin-config-card admin-config-tableCard overflow-hidden">
-      <CardHeader className="admin-config-cardHeader gap-4 border-b border-slate-100/90 bg-[linear-gradient(180deg,rgba(255,251,235,0.96),rgba(255,255,255,0.98))]">
-        <div className="space-y-2">
-          <CardTitle className="text-[30px]">{title}</CardTitle>
+      <CardHeader className="admin-config-cardHeader gap-4 border-b border-slate-100/90 bg-[linear-gradient(180deg,rgba(255,251,235,0.96),rgba(255,255,255,0.98))] xl:flex-row xl:items-end xl:justify-between">
+        <div className="space-y-2 xl:max-w-[34rem]">
+          <CardTitle className="text-[28px] leading-[1.05]">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </div>
         {stats?.length ? (
-          <div className="admin-config-stats flex flex-wrap gap-3">
+          <div className="admin-config-stats flex flex-wrap gap-3 xl:justify-end">
             {stats.map((item) => (
               <div
                 key={item.label}
@@ -125,7 +125,7 @@ export function ConfigEditorCard({
     <Card className="admin-config-card admin-config-editorCard sticky top-6 overflow-hidden border-[#e5deef] bg-[linear-gradient(180deg,rgba(255,252,247,0.98),rgba(255,255,255,0.98))] shadow-[0_18px_48px_rgba(15,23,42,0.08)]">
       <CardHeader className="admin-config-cardHeader gap-3 border-b border-[#eee7f5] bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.12),transparent_36%),linear-gradient(180deg,rgba(253,250,244,0.95),rgba(255,255,255,0.92))]">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#9b91b5]">{eyebrow}</p>
-        <CardTitle className="text-[30px]">{title}</CardTitle>
+        <CardTitle className="text-[28px] leading-[1.05]">{title}</CardTitle>
         <CardDescription className="max-w-sm">{description}</CardDescription>
       </CardHeader>
       <CardContent className="admin-config-editorContent space-y-5 py-5">{children}</CardContent>
@@ -188,7 +188,7 @@ export function ConfigActionBar({
   isSubmitting?: boolean;
 }) {
   return (
-    <div className="admin-config-actionBar flex flex-col gap-3 sm:flex-row">
+    <div className="admin-config-actionBar grid gap-3 sm:grid-cols-2">
       <Button type="submit" className="admin-config-actionButton admin-config-actionButton--primary sm:flex-1" disabled={isSubmitting}>
         {isSubmitting ? "处理中..." : submitLabel}
       </Button>
@@ -200,5 +200,3 @@ export function ConfigActionBar({
 }
 
 export { Badge, Button, Input, Select, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Textarea };
-
-

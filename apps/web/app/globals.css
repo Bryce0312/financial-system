@@ -3164,3 +3164,208 @@ main {
     overflow: visible;
   }
 }
+
+/* Final override: lock the shared app shell surfaces and admin config panels into one stable visual system. */
+.app-shell-page :is(
+  .app-sidebar,
+  .app-content__frame,
+  .doodle-guide-card,
+  .doodle-stat-card,
+  .doodle-callout,
+  .expense-art-card,
+  .expense-art-scrollPanel,
+  .doodle-attachment-item,
+  .admin-config-card,
+  .admin-config-statChip,
+  .admin-config-statusCard,
+  .admin-filter-panel,
+  .admin-table-panel,
+  .admin-side-panel,
+  .expense-detail-attachmentRow,
+  .expense-detail-previewModal__panel
+) {
+  border: 2px solid rgba(214, 208, 227, 0.88) !important;
+  border-radius: 30px !important;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.06) !important;
+}
+
+.app-shell-page :is(.app-sidebar__logout, .app-nav-link, .admin-config-rowButton, .admin-config-actionButton, .admin-side-panel__primary) {
+  border: 2px solid rgba(214, 208, 227, 0.88) !important;
+  border-radius: 22px !important;
+}
+
+.admin-config-tableScroll th,
+.admin-config-tableScroll td {
+  vertical-align: middle !important;
+  line-height: 1.45;
+}
+
+.admin-config-tableScroll td {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.admin-config-tableScroll td:last-child,
+.admin-config-tableScroll th:last-child {
+  text-align: right;
+}
+
+.admin-config-tableScroll td:last-child button {
+  margin-inline-start: auto;
+}
+
+.admin-config-tableScroll td:first-child p:first-child {
+  line-height: 1.18;
+}
+
+.admin-config-tableScroll td:first-child p:last-child {
+  line-height: 1.28;
+}
+
+/* Final stable surface overrides: keep rounded corners and soft borders above legacy duplicated blocks. */
+.app-shell-page :is(
+  .app-sidebar,
+  .app-content__frame,
+  .doodle-guide-card,
+  .doodle-stat-card,
+  .doodle-callout,
+  .expense-art-card,
+  .expense-art-scrollPanel,
+  .doodle-attachment-item,
+  .admin-config-card,
+  .admin-config-statChip,
+  .admin-config-statusCard,
+  .admin-filter-panel,
+  .admin-table-panel,
+  .admin-side-panel,
+  .expense-detail-attachmentRow,
+  .expense-detail-previewModal__panel
+) {
+  border: 2px solid rgba(214, 208, 227, 0.88) !important;
+  border-radius: 30px !important;
+  box-shadow: 0 18px 42px rgba(91, 83, 111, 0.08) !important;
+}
+
+.app-shell-page :is(.app-sidebar, .app-content__frame, .expense-art-scrollPanel, .doodle-surface, .doodle-stat-card, .admin-config-card) {
+  overflow: hidden;
+}
+
+.app-shell-page :is(.app-sidebar__logout, .app-nav-link, .admin-config-rowButton, .admin-config-actionButton, .admin-side-panel__primary) {
+  border: 2px solid rgba(46, 41, 62, 0.2) !important;
+  border-radius: 22px !important;
+}
+
+.app-shell-page .admin-config-layout {
+  gap: 24px;
+}
+
+.app-shell-page .admin-config-layout__head {
+  gap: 18px;
+}
+
+.app-shell-page .admin-config-layout__copy {
+  display: grid;
+  gap: 10px;
+}
+
+.app-shell-page .admin-config-layout__copy h1,
+.app-shell-page .admin-config-card h3 {
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+}
+
+.app-shell-page .admin-config-layout__copy p,
+.app-shell-page .admin-config-card p {
+  line-height: 1.72;
+}
+
+.app-shell-page .admin-config-cardHeader {
+  gap: 16px;
+}
+
+.app-shell-page .admin-config-stats {
+  align-items: stretch;
+}
+
+.app-shell-page .admin-config-statChip {
+  min-width: 88px;
+  justify-content: center;
+}
+
+.app-shell-page .admin-config-tableCard tbody td,
+.app-shell-page .admin-config-tableCard thead th,
+.app-shell-page .admin-config-tableScroll td,
+.app-shell-page .admin-config-tableScroll th {
+  vertical-align: middle !important;
+  line-height: 1.45;
+}
+
+.app-shell-page .admin-config-tableScroll thead th {
+  text-align: center;
+}
+
+.app-shell-page .admin-config-tableScroll td:first-child {
+  min-width: 180px;
+}
+
+.app-shell-page .admin-config-tableScroll td:first-child p:first-child {
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.app-shell-page .admin-config-tableScroll td:first-child p:last-child {
+  color: #8c96a7;
+}
+
+.app-shell-page .admin-config-tableScroll td:last-child,
+.app-shell-page .admin-config-tableScroll th:last-child {
+  text-align: center;
+}
+
+.app-shell-page .admin-config-tableScroll td:last-child button {
+  min-width: 96px;
+  justify-content: center;
+}
+
+.app-shell-page .admin-config-editorContent {
+  display: grid;
+  gap: 20px;
+}
+
+.app-shell-page .admin-config-editorContent form {
+  gap: 20px;
+}
+
+.app-shell-page .admin-config-field {
+  display: grid;
+  gap: 10px;
+}
+
+.app-shell-page .admin-config-field :is(input, select, textarea) {
+  border-color: rgba(214, 208, 227, 0.92) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 18px rgba(91, 83, 111, 0.04);
+}
+
+.app-shell-page .admin-config-field textarea {
+  min-height: 110px;
+}
+
+.app-shell-page .admin-config-statusCard {
+  padding: 20px;
+}
+
+.app-shell-page .admin-config-actionBar {
+  align-items: stretch;
+}
+
+.app-shell-page .admin-config-actionButton {
+  min-height: 52px;
+  justify-content: center;
+}
+
+@media (max-width: 1380px) {
+  .app-shell-page .admin-config-tableScroll {
+    padding-bottom: 6px;
+  }
+}

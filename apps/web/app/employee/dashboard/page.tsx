@@ -13,7 +13,7 @@ function QuickStartIllustration() {
       <div className="doodle-callout__bubble">
         <span className="doodle-callout__eyebrow">Quick start</span>
         <strong>先把这张单顺着流程走一遍。</strong>
-        <p>建议顺序：新建报销 → 上传附件 → 查看异常提示 → 返回记录页核对状态。</p>
+        <p>建议顺序：新建报销、上传附件、查看异常提示，再返回记录页核对状态。</p>
       </div>
       <div className="doodle-callout__figureWrap" aria-hidden="true">
         <img
@@ -32,8 +32,7 @@ export default function EmployeeDashboardPage() {
 
   const stats = useQuery({
     queryKey: ["my-expenses-summary", currentMonth],
-    queryFn: () =>
-      apiFetch<Array<{ amountTotal: number; isOverLimit: boolean }>>(`/expenses/my?month=${currentMonth}`)
+    queryFn: () => apiFetch<Array<{ amountTotal: number; isOverLimit: boolean }>>(`/expenses/my?month=${currentMonth}`)
   });
 
   const totalAmount = (stats.data || []).reduce((sum, item) => sum + item.amountTotal, 0);
@@ -46,9 +45,7 @@ export default function EmployeeDashboardPage() {
           <div>
             <p className="doodle-hero__eyebrow">EMPLOYEE OVERVIEW</p>
             <h1 className="doodle-hero__title">我的首页</h1>
-            <p className="doodle-hero__desc">
-              查看本月报销概览，快速进入新建流程，并及时查看异常标记与附件状态。
-            </p>
+            <p className="doodle-hero__desc">查看本月报销概览，快速进入新建流程，并及时查看异常标记与附件状态。</p>
           </div>
           <QuickStartIllustration />
         </section>
@@ -67,7 +64,7 @@ export default function EmployeeDashboardPage() {
           </article>
           <article className="doodle-guide-card">
             <span className="doodle-guide-card__step">02</span>
-            <h3>上交附件</h3>
+            <h3>上传附件</h3>
             <p>有发票的单据尽量同步上传，管理端查看会更顺畅，也能减少缺票标记。</p>
           </article>
           <article className="doodle-guide-card">

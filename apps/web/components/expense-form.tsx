@@ -399,65 +399,67 @@ export function ExpenseForm() {
       <Card className="expense-art-formShell">
         <div className="expense-art-formShell__scroll">
           <div className="expense-art-formShell__inner">
-            <section className="expense-art-sectionBlock" tabIndex={0}>
+            <section className="expense-art-sectionBlock expense-art-sectionBlock--basic">
               <SectionTitle eyebrow="Basic Info" title={TEXT.basicTitle} desc={TEXT.basicDesc} />
-              <div className="expense-art-grid expense-art-grid--two">
+              <div className="expense-art-sectionScroll expense-art-sectionScroll--basic">
+                <div className="expense-art-grid expense-art-grid--two">
+                  <label className="expense-art-field">
+                    <span>{TEXT.category}</span>
+                    <Select
+                      {...form.register("categoryId")}
+                      disabled={categoriesQuery.isLoading || !!categoriesQuery.error}
+                      onChange={(event) => {
+                        const category = categories.find((item) => item.id === event.target.value);
+                        form.setValue("categoryId", event.target.value);
+                        form.setValue("extensionType", (category?.extensionType || ExpenseExtensionType.NONE) as never);
+                      }}
+                    >
+                      <option value="">
+                        {categoriesQuery.isLoading ? TEXT.loadingCategories : categoriesQuery.error ? TEXT.categoryLoadFailed : TEXT.selectCategory}
+                      </option>
+                      {categories.map((item) => (
+                        <option key={item.id} value={item.id}>{item.name}</option>
+                      ))}
+                    </Select>
+                  </label>
+                  <label className="expense-art-field">
+                    <span>{TEXT.title}</span>
+                    <Input {...form.register("title")} name="title" placeholder={TEXT.titlePlaceholder} />
+                  </label>
+                  <label className="expense-art-field">
+                    <span>{TEXT.amountTotal}</span>
+                    <Input type="number" step="0.01" {...form.register("amountTotal", { valueAsNumber: true })} name="amountTotal" />
+                  </label>
+                  <label className="expense-art-field">
+                    <span>{TEXT.expenseDate}</span>
+                    <Input type="date" {...form.register("expenseDate")} name="expenseDate" />
+                  </label>
+                  <label className="expense-art-field">
+                    <span>{TEXT.uploadMethod}</span>
+                    <Select {...form.register("uploadMethod")} name="uploadMethod">
+                      <option value={UploadMethod.MANUAL}>{TEXT.manual}</option>
+                      <option value={UploadMethod.IMAGE}>{TEXT.image}</option>
+                      <option value={UploadMethod.PDF}>PDF</option>
+                      <option value={UploadMethod.CAMERA}>{TEXT.camera}</option>
+                    </Select>
+                  </label>
+                  <label className="expense-art-field">
+                    <span>{TEXT.hasInvoice}</span>
+                    <Select name="hasInvoice" value={String(form.watch("hasInvoice"))} onChange={(event) => form.setValue("hasInvoice", event.target.value === "true")}>
+                      <option value="true">{TEXT.withInvoice}</option>
+                      <option value="false">{TEXT.withoutInvoice}</option>
+                    </Select>
+                  </label>
+                </div>
                 <label className="expense-art-field">
-                  <span>{TEXT.category}</span>
-                  <Select
-                    {...form.register("categoryId")}
-                    disabled={categoriesQuery.isLoading || !!categoriesQuery.error}
-                    onChange={(event) => {
-                      const category = categories.find((item) => item.id === event.target.value);
-                      form.setValue("categoryId", event.target.value);
-                      form.setValue("extensionType", (category?.extensionType || ExpenseExtensionType.NONE) as never);
-                    }}
-                  >
-                    <option value="">
-                      {categoriesQuery.isLoading ? TEXT.loadingCategories : categoriesQuery.error ? TEXT.categoryLoadFailed : TEXT.selectCategory}
-                    </option>
-                    {categories.map((item) => (
-                      <option key={item.id} value={item.id}>{item.name}</option>
-                    ))}
-                  </Select>
+                  <span>{TEXT.remark}</span>
+                  <Textarea {...form.register("remark")} name="remark" placeholder={TEXT.remarkPlaceholder} />
                 </label>
-                <label className="expense-art-field">
-                  <span>{TEXT.title}</span>
-                  <Input {...form.register("title")} name="title" placeholder={TEXT.titlePlaceholder} />
-                </label>
-                <label className="expense-art-field">
-                  <span>{TEXT.amountTotal}</span>
-                  <Input type="number" step="0.01" {...form.register("amountTotal", { valueAsNumber: true })} name="amountTotal" />
-                </label>
-                <label className="expense-art-field">
-                  <span>{TEXT.expenseDate}</span>
-                  <Input type="date" {...form.register("expenseDate")} name="expenseDate" />
-                </label>
-                <label className="expense-art-field">
-                  <span>{TEXT.uploadMethod}</span>
-                  <Select {...form.register("uploadMethod")} name="uploadMethod">
-                    <option value={UploadMethod.MANUAL}>{TEXT.manual}</option>
-                    <option value={UploadMethod.IMAGE}>{TEXT.image}</option>
-                    <option value={UploadMethod.PDF}>PDF</option>
-                    <option value={UploadMethod.CAMERA}>{TEXT.camera}</option>
-                  </Select>
-                </label>
-                <label className="expense-art-field">
-                  <span>{TEXT.hasInvoice}</span>
-                  <Select name="hasInvoice" value={String(form.watch("hasInvoice"))} onChange={(event) => form.setValue("hasInvoice", event.target.value === "true")}>
-                    <option value="true">{TEXT.withInvoice}</option>
-                    <option value="false">{TEXT.withoutInvoice}</option>
-                  </Select>
-                </label>
-              </div>
-              <label className="expense-art-field">
-                <span>{TEXT.remark}</span>
-                <Textarea {...form.register("remark")} name="remark" placeholder={TEXT.remarkPlaceholder} />
-              </label>
-              <div className="expense-art-inlineNoteRow">
-                {selectedCategory?.invoiceRequired ? <Badge variant="warning">{TEXT.invoiceRequired}</Badge> : null}
-                {amountTotal > 0 ? <Badge variant="muted">{TEXT.currentAmount}{currency(amountTotal)}</Badge> : null}
-                {categoriesQuery.error ? <Badge variant="danger">{TEXT.categoryRefresh}</Badge> : null}
+                <div className="expense-art-inlineNoteRow">
+                  {selectedCategory?.invoiceRequired ? <Badge variant="warning">{TEXT.invoiceRequired}</Badge> : null}
+                  {amountTotal > 0 ? <Badge variant="muted">{TEXT.currentAmount}{currency(amountTotal)}</Badge> : null}
+                  {categoriesQuery.error ? <Badge variant="danger">{TEXT.categoryRefresh}</Badge> : null}
+                </div>
               </div>
             </section>
 
@@ -535,7 +537,7 @@ export function ExpenseForm() {
               ) : null}
             </section>
 
-            <section className="expense-art-sectionBlock expense-art-sectionBlock--attachment" tabIndex={0}>
+            <section className="expense-art-sectionBlock expense-art-sectionBlock--attachment">
               <AttachmentSketch />
               <SectionTitle eyebrow="Attachments" title={TEXT.attachmentTitle} desc={TEXT.attachmentDesc} />
               <div className="expense-art-inlineNoteRow expense-art-inlineNoteRow--top">
@@ -599,7 +601,6 @@ export function ExpenseForm() {
             type="submit"
             disabled={mutation.isPending || !!categoriesQuery.error}
             className="min-w-[220px] expense-art-actionBar__submit"
-            style={{ backgroundColor: "#111827", borderColor: "#111827", color: "#ffffff", boxShadow: "4px 4px 0 rgba(17, 24, 39, 0.18)" }}
           >
             {mutation.isPending ? TEXT.uploading : uploads.length > 0 ? TEXT.uploadAndSubmit : TEXT.submit}
           </Button>
@@ -611,6 +612,9 @@ export function ExpenseForm() {
     </form>
   );
 }
+
+
+
 
 
 

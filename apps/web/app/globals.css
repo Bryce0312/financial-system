@@ -3369,3 +3369,1847 @@ main {
     padding-bottom: 6px;
   }
 }
+
+/* Shared admin-config overrides: keep config pages stable inside app-shell without per-page patches. */
+.app-shell-page .admin-config-card,
+.app-shell-page .admin-config-cardHeader,
+.app-shell-page .admin-config-tableContent,
+.app-shell-page .admin-config-editorContent,
+.app-shell-page .admin-config-statChip,
+.app-shell-page .admin-config-statusCard,
+.app-shell-page .admin-config-tableScroll,
+.app-shell-page .admin-config-tableScroll table,
+.app-shell-page .admin-config-tableScroll th,
+.app-shell-page .admin-config-tableScroll td,
+.app-shell-page .admin-config-field :is(input, select, textarea),
+.app-shell-page .admin-config-actionButton,
+.app-shell-page .admin-config-rowButton {
+  box-sizing: border-box;
+}
+
+.app-shell-page .admin-config-card,
+.app-shell-page .admin-config-tableCard,
+.app-shell-page .admin-config-editorCard {
+  border: 2px solid rgba(214, 208, 227, 0.88) !important;
+  border-radius: 30px !important;
+  overflow: hidden !important;
+}
+
+.app-shell-page .admin-config-cardHeader,
+.app-shell-page .admin-config-tableContent,
+.app-shell-page .admin-config-editorContent {
+  padding-left: 28px !important;
+  padding-right: 28px !important;
+}
+
+.app-shell-page .admin-config-statChip,
+.app-shell-page .admin-config-statusCard,
+.app-shell-page .admin-config-statusCard .inline-flex,
+.app-shell-page .admin-config-stats > div {
+  overflow: hidden;
+}
+
+.app-shell-page .admin-config-statChip,
+.app-shell-page .admin-config-statusCard {
+  border-radius: 26px !important;
+}
+
+.app-shell-page .admin-config-statusCard .inline-flex {
+  border-radius: 999px;
+  min-height: 40px;
+  padding-inline: 14px;
+}
+
+.app-shell-page .admin-config-tableScroll {
+  overflow: auto;
+  padding-bottom: 8px;
+}
+
+.app-shell-page .admin-config-tableScroll table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.app-shell-page .admin-config-tableScroll th,
+.app-shell-page .admin-config-tableScroll td {
+  vertical-align: middle !important;
+  padding: 18px !important;
+}
+
+.app-shell-page .admin-config-tableScroll td:nth-child(3),
+.app-shell-page .admin-config-tableScroll th:nth-child(3),
+.app-shell-page .admin-config-tableScroll td:nth-child(4),
+.app-shell-page .admin-config-tableScroll th:nth-child(4) {
+  text-align: center;
+}
+
+.app-shell-page .admin-config-tableScroll td:first-child {
+  min-width: 0;
+}
+
+.app-shell-page .admin-config-tableScroll td:last-child,
+.app-shell-page .admin-config-tableScroll th:last-child {
+  width: 132px;
+  text-align: center !important;
+}
+
+.app-shell-page .admin-config-tableScroll td:last-child button {
+  margin-inline: auto !important;
+}
+
+.app-shell-page .admin-config-field > div {
+  align-items: center;
+}
+
+.app-shell-page .admin-config-field__meta {
+  display: grid;
+  gap: 4px;
+  align-items: start;
+}
+
+.app-shell-page .admin-config-field__label {
+  line-height: 1.2;
+}
+
+.app-shell-page .admin-config-field__hint,
+.app-shell-page .admin-config-field span.text-xs {
+  display: block;
+  white-space: normal !important;
+  line-height: 1.45;
+  color: #94a3b8 !important;
+}
+
+.app-shell-page .admin-config-field :is(input, select, textarea) {
+  width: 100%;
+  min-height: 56px;
+  border: 2px solid rgba(214, 208, 227, 0.92) !important;
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  color: #334155 !important;
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+  box-shadow: 0 10px 24px rgba(91, 83, 111, 0.05) !important;
+  font-size: 15px;
+}
+
+.app-shell-page .admin-config-field textarea {
+  min-height: 118px;
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+}
+
+.app-shell-page .admin-config-actionBar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.app-shell-page button.admin-config-actionButton,
+.app-shell-page button.admin-config-rowButton {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-style: solid !important;
+  border-width: 2px !important;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+}
+
+.app-shell-page button.admin-config-actionButton {
+  width: 100%;
+  min-height: 56px !important;
+  padding: 0 20px !important;
+  border-radius: 24px !important;
+  font-weight: 700;
+}
+
+.app-shell-page button.admin-config-actionButton .admin-config-actionLabel {
+  display: inline-flex !important;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.app-shell-page button.admin-config-actionButton--primary,
+.app-shell-page button.admin-config-actionButton--primary:hover,
+.app-shell-page button.admin-config-actionButton--primary:focus-visible,
+.app-shell-page button.admin-config-actionButton--primary:active {
+  background: #111827 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border-color: #111827 !important;
+  box-shadow: 0 14px 28px rgba(17, 24, 39, 0.18) !important;
+}
+
+.app-shell-page button.admin-config-actionButton--primary .admin-config-actionLabel,
+.app-shell-page button.admin-config-actionButton--primary .admin-config-actionLabel * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.app-shell-page button.admin-config-actionButton--secondary,
+.app-shell-page button.admin-config-actionButton--secondary:hover,
+.app-shell-page button.admin-config-actionButton--secondary:focus-visible,
+.app-shell-page button.admin-config-actionButton--secondary:active,
+.app-shell-page button.admin-config-rowButton,
+.app-shell-page button.admin-config-rowButton:hover,
+.app-shell-page button.admin-config-rowButton:focus-visible,
+.app-shell-page button.admin-config-rowButton:active {
+  background: rgba(255, 255, 255, 0.97) !important;
+  color: #2b2438 !important;
+  -webkit-text-fill-color: #2b2438 !important;
+  border-color: rgba(214, 208, 227, 0.95) !important;
+  box-shadow: 0 10px 20px rgba(91, 83, 111, 0.06) !important;
+}
+
+.app-shell-page button.admin-config-rowButton {
+  min-width: 96px;
+  min-height: 46px;
+  padding: 0 18px !important;
+  border-radius: 999px !important;
+  font-weight: 600;
+}
+
+@media (max-width: 780px) {
+  .app-shell-page .admin-config-actionBar {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Admin workspace refinements: tighten typography, fix action buttons, and separate overview/records/export modules. */
+.doodle-stat-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 194px;
+}
+
+.doodle-stat-card__header {
+  padding: 24px 24px 0 !important;
+}
+
+.doodle-stat-card__label {
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7b8497;
+}
+
+.doodle-stat-card__body {
+  gap: 12px;
+  padding: 8px 24px 24px !important;
+  align-content: space-between;
+}
+
+.doodle-stat-card__value {
+  font-size: clamp(2.25rem, 3vw, 3rem);
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+}
+
+.doodle-stat-card__hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #6b7280;
+}
+
+.admin-overview-hero,
+.admin-records-hero {
+  align-items: stretch;
+}
+
+.admin-overview-filterCard,
+.admin-records-filterPanel,
+.admin-export-create,
+.admin-export-notes,
+.admin-overview-tableCard,
+.admin-records-tablePanel {
+  overflow: hidden;
+}
+
+.admin-overview-filterCard .admin-filter-panel__content,
+.admin-records-filterPanel__content,
+.admin-export-create__content {
+  padding-top: 10px;
+}
+
+.admin-overview-stats {
+  gap: 16px;
+}
+
+.admin-overview-tableCard__header,
+.admin-records-tablePanel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-overview-tableCard__eyebrow {
+  margin-bottom: 10px;
+}
+
+.admin-empty-row {
+  padding: 28px 18px !important;
+  text-align: center;
+  color: #64748b;
+}
+
+.admin-export-layout {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.admin-export-hero__copy {
+  max-width: 720px;
+}
+
+.admin-export-create__header,
+.admin-export-notes__header {
+  gap: 10px;
+}
+
+.admin-export-create__eyebrow {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8f86a3;
+}
+
+.admin-export-actions {
+  display: grid;
+  gap: 12px;
+}
+
+button.admin-side-panel__primary,
+button.admin-side-panel__secondary {
+  width: 100%;
+  min-height: 56px;
+  justify-content: center;
+  border-radius: 22px !important;
+}
+
+button.admin-side-panel__primary--dark,
+button.admin-side-panel__primary--dark:hover,
+button.admin-side-panel__primary--dark:focus-visible,
+button.admin-side-panel__primary--dark:active {
+  background: #111827 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border-color: #111827 !important;
+  box-shadow: 0 14px 28px rgba(17, 24, 39, 0.18) !important;
+}
+
+button.admin-side-panel__primary--dark .admin-side-panel__primaryLabel,
+button.admin-side-panel__primary--dark .admin-side-panel__primaryLabel * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+button.admin-side-panel__secondary,
+button.admin-side-panel__secondary:hover,
+button.admin-side-panel__secondary:focus-visible,
+button.admin-side-panel__secondary:active {
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #2b2438 !important;
+  border-color: rgba(214, 208, 227, 0.92) !important;
+  box-shadow: 0 10px 20px rgba(91, 83, 111, 0.06) !important;
+}
+
+.admin-side-panel__primaryLabel {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.admin-export-statusBoard {
+  margin-top: 4px;
+}
+
+.admin-export-noteList {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-export-noteList > div {
+  display: grid;
+  gap: 6px;
+  padding: 18px 20px;
+  border: 1.5px solid rgba(221, 214, 232, 0.88);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.admin-export-noteList strong {
+  color: #111827;
+  font-size: 15px;
+}
+
+.admin-export-noteList p {
+  margin: 0;
+}
+
+.admin-records-page {
+  gap: 18px;
+}
+
+.admin-records-summaryGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.admin-records-summaryChip {
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  border: 1.5px solid rgba(221, 214, 232, 0.88);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.74);
+}
+
+.admin-records-summaryChip span {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8b94a7;
+}
+
+.admin-records-summaryChip strong {
+  font-size: 20px;
+  line-height: 1.15;
+  color: #111827;
+}
+
+.admin-records-tablePanel__content {
+  padding-top: 10px;
+}
+
+.admin-records-tableScroll {
+  padding-top: 4px;
+}
+
+.admin-records-link {
+  line-height: 1.45;
+}
+
+.admin-table-scroll tbody td {
+  line-height: 1.5;
+}
+
+@media (max-width: 1380px) {
+  .admin-export-layout,
+  .admin-records-summaryGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 980px) {
+  .admin-overview-tableCard__header,
+  .admin-records-tablePanel__header {
+    flex-direction: column;
+  }
+}
+
+/* Shared workspace layout refinements for list/detail surfaces across admin and employee pages. */
+.workspace-page {
+  display: grid;
+  gap: 20px;
+}
+
+.workspace-hero {
+  display: grid;
+  gap: 18px;
+  align-items: start;
+}
+
+.workspace-hero--stacked {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+}
+
+.workspace-hero--employee {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.52fr);
+  align-items: center;
+}
+
+.workspace-hero__main {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.workspace-hero__action {
+  width: 100%;
+  min-height: 56px;
+  justify-self: end;
+}
+
+.workspace-toolbar {
+  display: grid;
+  gap: 16px;
+}
+
+.workspace-toolbar--employee {
+  grid-template-columns: minmax(280px, 0.42fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.workspace-filterPanel {
+  background: linear-gradient(180deg, rgba(255, 252, 247, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
+}
+
+.workspace-filterPanel__header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.workspace-filterPanel__content {
+  display: grid;
+  gap: 14px;
+  padding-top: 8px;
+}
+
+.workspace-filterPanel--single .workspace-filterPanel__content,
+.workspace-filterPanel--compact .workspace-filterPanel__content {
+  max-width: 100%;
+}
+
+.workspace-summaryGrid {
+  display: grid;
+  gap: 14px;
+}
+
+.workspace-summaryGrid--records {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.workspace-summaryGrid--employee {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.workspace-summaryChip {
+  display: grid;
+  gap: 8px;
+  min-height: 112px;
+  padding: 18px 20px;
+  border: 1.5px solid rgba(221, 214, 232, 0.88);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.workspace-summaryChip span {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8b94a7;
+}
+
+.workspace-summaryChip strong {
+  font-size: 20px;
+  line-height: 1.15;
+  color: #111827;
+}
+
+.workspace-tablePanel {
+  overflow: hidden;
+}
+
+.workspace-tablePanel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.workspace-tablePanel__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.workspace-tablePanel__metaText {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.workspace-detailPage {
+  display: grid;
+  gap: 20px;
+}
+
+.workspace-detailHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+  gap: 18px;
+  align-items: start;
+}
+
+.workspace-detailCallout {
+  min-height: 112px;
+}
+
+.workspace-detailCard {
+  overflow: hidden;
+}
+
+.workspace-detailCard__header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.workspace-detailMetaGrid {
+  display: grid;
+  gap: 14px 28px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.workspace-detailMetaGrid p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #334155;
+}
+
+.workspace-detailFields {
+  display: grid;
+  gap: 12px;
+}
+
+.workspace-detailFields p {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.workspace-detailFields strong {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.workspace-detailFields span {
+  color: #1e293b;
+}
+
+.workspace-detailAttachmentList {
+  display: grid;
+  gap: 12px;
+}
+
+.workspace-detailAttachmentItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border: 1.5px solid rgba(221, 214, 232, 0.88);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+@media (max-width: 1380px) {
+  .workspace-hero--stacked,
+  .workspace-toolbar--employee,
+  .workspace-detailHero,
+  .workspace-summaryGrid--records,
+  .workspace-summaryGrid--employee {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 980px) {
+  .workspace-hero--employee {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace-tablePanel__header {
+    flex-direction: column;
+  }
+
+  .workspace-detailMetaGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace-detailAttachmentItem {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+/* Final workspace override: resolve legacy admin surface collisions for list/detail modules. */
+.app-shell-page :is(.workspace-filterPanel, .workspace-tablePanel, .workspace-detailCard, .workspace-detailCallout) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden !important;
+  border: 1.5px solid rgba(214, 208, 227, 0.92) !important;
+  border-radius: 30px !important;
+  background: linear-gradient(180deg, rgba(255, 252, 247, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
+  box-shadow: 0 18px 42px rgba(91, 83, 111, 0.08) !important;
+}
+
+.app-shell-page :is(.workspace-filterPanel, .workspace-tablePanel, .workspace-detailCard) :is(.workspace-filterPanel__header, .workspace-tablePanel__header, .workspace-detailCard__header) {
+  gap: 10px;
+  padding: 26px 26px 10px !important;
+}
+
+.app-shell-page .workspace-filterPanel__content {
+  gap: 16px;
+  padding: 8px 26px 24px !important;
+}
+
+.app-shell-page .workspace-tablePanel .admin-table-panel__content,
+.app-shell-page .workspace-detailCard > div:last-child {
+  padding: 8px 26px 24px !important;
+}
+
+.app-shell-page .workspace-filterPanel :is(h3, .text-\[24px\], .text-\[26px\]),
+.app-shell-page .workspace-tablePanel h3,
+.app-shell-page .workspace-detailCard h3 {
+  margin: 0;
+  line-height: 1.08 !important;
+}
+
+.app-shell-page .workspace-filterPanel .admin-export-create__eyebrow,
+.app-shell-page .workspace-tablePanel .admin-export-create__eyebrow,
+.app-shell-page .workspace-detailCard .admin-export-create__eyebrow {
+  margin-bottom: 6px;
+}
+
+.app-shell-page .workspace-filterPanel .admin-table-panel__desc,
+.app-shell-page .workspace-tablePanel .admin-table-panel__desc,
+.app-shell-page .workspace-detailCard .admin-table-panel__desc,
+.app-shell-page .workspace-detailCallout p {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.app-shell-page .workspace-summaryChip {
+  min-height: 124px;
+  align-content: space-between;
+  border: 1.5px solid rgba(221, 214, 232, 0.88) !important;
+  border-radius: 26px !important;
+  box-shadow: 0 12px 28px rgba(91, 83, 111, 0.05) !important;
+}
+
+.app-shell-page .workspace-summaryChip span {
+  line-height: 1.35;
+}
+
+.app-shell-page .workspace-summaryChip strong {
+  line-height: 1;
+}
+
+.app-shell-page .workspace-tablePanel .admin-table-scroll {
+  padding-top: 2px;
+}
+
+.app-shell-page .workspace-tablePanel table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.app-shell-page .workspace-tablePanel :is(th, td) {
+  vertical-align: middle;
+}
+
+.app-shell-page .workspace-tablePanel tbody td {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.app-shell-page .workspace-filterPanel .doodle-filter-field,
+.app-shell-page .workspace-detailCard .workspace-detailFields p {
+  align-content: start;
+}
+
+.app-shell-page .workspace-filterPanel .doodle-filter-field span {
+  line-height: 1.25;
+}
+
+@media (max-width: 980px) {
+  .app-shell-page :is(.workspace-filterPanel, .workspace-tablePanel, .workspace-detailCard) :is(.workspace-filterPanel__header, .workspace-tablePanel__header, .workspace-detailCard__header),
+  .app-shell-page .workspace-filterPanel__content,
+  .app-shell-page .workspace-tablePanel .admin-table-panel__content,
+  .app-shell-page .workspace-detailCard > div:last-child {
+    padding-left: 22px !important;
+    padding-right: 22px !important;
+  }
+}
+
+/* Final expense form cleanup: remove heavy black outlines and rebalance the page composition. */
+.app-shell-page .expense-art-formShell {
+  border: 1.5px solid rgba(214, 208, 227, 0.92) !important;
+  border-radius: 34px !important;
+  background: linear-gradient(180deg, rgba(255, 252, 247, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
+  box-shadow: 0 20px 44px rgba(91, 83, 111, 0.08) !important;
+}
+
+.app-shell-page .expense-art-formShell__scroll {
+  height: auto !important;
+  overflow: visible !important;
+  padding: 26px 28px 30px !important;
+}
+
+.app-shell-page .expense-art-formShell__inner {
+  gap: 18px;
+}
+
+.app-shell-page .expense-art-sectionBlock {
+  gap: 18px;
+  padding: 24px 22px 22px;
+  border: 1px solid rgba(228, 223, 237, 0.96);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 12px 28px rgba(91, 83, 111, 0.04);
+}
+
+.app-shell-page .expense-art-sectionBlock,
+.app-shell-page .expense-art-sectionBlock:hover,
+.app-shell-page .expense-art-sectionBlock:focus,
+.app-shell-page .expense-art-sectionBlock:focus-visible,
+.app-shell-page .expense-art-sectionBlock:focus-within {
+  transform: none !important;
+  outline: none !important;
+  border-color: rgba(228, 223, 237, 0.96) !important;
+  box-shadow: 0 12px 28px rgba(91, 83, 111, 0.04) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+}
+
+.app-shell-page .expense-art-sectionBlock:last-child {
+  padding-bottom: 22px;
+}
+
+.app-shell-page .expense-art-sectionBlock--attachment {
+  padding-right: 22px;
+}
+
+.app-shell-page .expense-art-sectionHead {
+  gap: 8px;
+}
+
+.app-shell-page .expense-art-sectionTag {
+  margin-bottom: 2px;
+}
+
+.app-shell-page .expense-art-sectionTitle {
+  font-size: 30px;
+  line-height: 1.08;
+}
+
+.app-shell-page .expense-art-sectionDesc {
+  max-width: 720px;
+  font-size: 14px;
+  line-height: 1.75;
+  color: #64748b;
+}
+
+.app-shell-page .expense-art-grid {
+  gap: 16px 18px;
+}
+
+.app-shell-page .expense-art-field {
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.app-shell-page .expense-art-field:hover,
+.app-shell-page .expense-art-field:focus-within {
+  transform: none;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.app-shell-page .expense-art-field span {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #334155;
+}
+
+.app-shell-page .expense-art-field :is(input, select, textarea) {
+  border: 1.5px solid rgba(214, 208, 227, 0.92) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: none !important;
+}
+
+.app-shell-page .expense-art-field :is(input, select, textarea):hover {
+  border-color: rgba(201, 193, 215, 0.94) !important;
+  box-shadow: 0 0 0 3px rgba(238, 233, 246, 0.7) !important;
+}
+
+.app-shell-page .expense-art-field :is(input, select, textarea):focus {
+  border-color: rgba(153, 140, 181, 0.96) !important;
+  box-shadow: 0 0 0 4px rgba(229, 224, 239, 0.82) !important;
+}
+
+.app-shell-page .expense-art-inlineNoteRow {
+  margin-top: 4px;
+}
+
+.app-shell-page .expense-art-actionBar {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  padding: 18px 22px 22px;
+  border: 1.5px solid rgba(214, 208, 227, 0.92) !important;
+  border-radius: 28px !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: 0 16px 34px rgba(91, 83, 111, 0.08) !important;
+}
+
+.app-shell-page .expense-art-actionBar__main {
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.app-shell-page .expense-art-actionBar__clear,
+.app-shell-page .expense-art-actionBar__submit {
+  min-height: 54px;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+.app-shell-page .expense-art-actionBar__submit,
+.app-shell-page .expense-art-actionBar__submit:hover,
+.app-shell-page .expense-art-actionBar__submit:focus-visible,
+.app-shell-page .expense-art-actionBar__submit:active {
+  background: #111827 !important;
+  border-color: #111827 !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 24px rgba(17, 24, 39, 0.16) !important;
+}
+
+.app-shell-page .expense-art-actionBar__hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+@media (max-width: 1080px) {
+  .app-shell-page .expense-art-formShell__scroll {
+    padding-left: 22px !important;
+    padding-right: 22px !important;
+  }
+
+  .app-shell-page .expense-art-sectionBlock {
+    padding: 22px 18px 20px;
+  }
+}
+
+/* Export workspace refinements: separate creation, status, and notes into clearer modules. */
+.admin-export-layout {
+  grid-template-columns: minmax(360px, 0.78fr) minmax(0, 1.22fr);
+  align-items: start;
+}
+
+.admin-export-workspace {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-export-card {
+  overflow: hidden;
+}
+
+.admin-export-card--primary,
+.admin-export-card--status,
+.admin-export-card--notes {
+  border: 1.5px solid rgba(214, 208, 227, 0.92) !important;
+  border-radius: 30px !important;
+  box-shadow: 0 16px 34px rgba(91, 83, 111, 0.06) !important;
+}
+
+.admin-export-create__header,
+.admin-export-notes__header,
+.admin-export-statusCard__header {
+  gap: 10px;
+  padding-bottom: 10px !important;
+}
+
+.admin-export-create__content,
+.admin-export-notes__content,
+.admin-export-statusCard__content {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-export-actions {
+  gap: 12px;
+}
+
+.admin-export-actions__primary,
+.admin-export-actions__secondary {
+  min-height: 54px;
+}
+
+.admin-export-actions__hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #64748b;
+}
+
+.admin-export-statusCard__content {
+  padding-top: 10px !important;
+}
+
+.admin-export-statusBoard {
+  padding: 14px 16px;
+}
+
+.admin-export-card--placeholder {
+  background: linear-gradient(180deg, rgba(249, 247, 252, 0.92) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
+}
+
+.admin-export-placeholder {
+  display: grid;
+  gap: 8px;
+  min-height: 148px;
+  align-content: center;
+  color: #64748b;
+}
+
+.admin-export-placeholder strong {
+  color: #111827;
+  font-size: 18px;
+}
+
+.admin-export-noteList {
+  gap: 14px;
+}
+
+.admin-export-noteList > div {
+  padding: 18px 20px;
+  border: 1px solid rgba(228, 223, 237, 0.96);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+@media (max-width: 1380px) {
+  .admin-export-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Export page inset tuning: keep content away from rounded corners with a tighter center column. */
+.admin-export-card--primary .admin-export-create__header,
+.admin-export-card--primary .admin-export-create__content,
+.admin-export-card--status .admin-export-statusCard__header,
+.admin-export-card--status .admin-export-statusCard__content,
+.admin-export-card--notes .admin-export-notes__header,
+.admin-export-card--notes .admin-export-notes__content,
+.admin-export-card--placeholder .admin-export-placeholder {
+  width: min(100%, 88%);
+  margin-inline: auto;
+}
+
+.admin-export-card--primary .admin-export-create__header,
+.admin-export-card--status .admin-export-statusCard__header,
+.admin-export-card--notes .admin-export-notes__header {
+  padding-top: 30px !important;
+}
+
+.admin-export-card--primary .admin-export-create__content,
+.admin-export-card--status .admin-export-statusCard__content,
+.admin-export-card--notes .admin-export-notes__content {
+  padding-top: 6px !important;
+  padding-bottom: 28px !important;
+}
+
+.admin-export-card--primary .admin-table-panel__desc,
+.admin-export-card--status .admin-table-panel__desc,
+.admin-export-card--notes .admin-table-panel__desc,
+.admin-export-actions__hint,
+.admin-export-noteList p,
+.admin-export-placeholder p {
+  max-width: 40rem;
+}
+
+.admin-export-card--primary .admin-export-field,
+.admin-export-card--primary .admin-export-actions,
+.admin-export-card--status .admin-status-board,
+.admin-export-card--notes .admin-export-noteList {
+  width: min(100%, 96%);
+  margin-inline: auto;
+}
+
+.admin-export-card--primary .admin-export-field {
+  gap: 10px;
+}
+
+.admin-export-card--primary .admin-export-actions {
+  margin-top: 4px;
+}
+
+.admin-export-card--primary .admin-export-actions__primary,
+.admin-export-card--primary .admin-export-actions__secondary {
+  width: min(100%, 96%);
+  margin-inline: auto;
+}
+
+.admin-export-card--primary .admin-export-actions__hint {
+  width: min(100%, 94%);
+  margin-inline: auto;
+}
+
+.admin-export-card--status .admin-status-board {
+  padding: 16px 18px;
+}
+
+.admin-export-card--notes .admin-export-noteList {
+  gap: 16px;
+}
+
+.admin-export-card--notes .admin-export-noteList > div {
+  width: min(100%, 95%);
+  margin-inline: auto;
+  padding: 20px 22px;
+}
+
+.admin-export-card--placeholder .admin-export-placeholder {
+  min-height: 164px;
+  width: min(100%, 84%);
+}
+
+@media (max-width: 1180px) {
+  .admin-export-card--primary .admin-export-create__header,
+  .admin-export-card--primary .admin-export-create__content,
+  .admin-export-card--status .admin-export-statusCard__header,
+  .admin-export-card--status .admin-export-statusCard__content,
+  .admin-export-card--notes .admin-export-notes__header,
+  .admin-export-card--notes .admin-export-notes__content,
+  .admin-export-card--placeholder .admin-export-placeholder {
+    width: min(100%, 92%);
+  }
+}
+
+/* Admin overview inset tuning: keep month control, stat cards, and anomaly table inside a calmer center safe area. */
+.admin-overview-page--inset {
+  gap: 24px;
+}
+
+.admin-overview-hero {
+  grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
+}
+
+.admin-overview-filterCard--inset .admin-overview-filterCard__header,
+.admin-overview-filterCard--inset .admin-overview-filterCard__content,
+.admin-overview-tableCard--inset .admin-overview-tableCard__header,
+.admin-overview-tableCard--inset .admin-overview-tableCard__content {
+  width: min(100%, 88%);
+  margin-inline: auto;
+}
+
+.admin-overview-filterCard--inset .admin-overview-filterCard__header,
+.admin-overview-tableCard--inset .admin-overview-tableCard__header {
+  padding-top: 30px !important;
+}
+
+.admin-overview-filterCard--inset .admin-overview-filterCard__content,
+.admin-overview-tableCard--inset .admin-overview-tableCard__content {
+  padding-top: 8px !important;
+  padding-bottom: 28px !important;
+}
+
+.admin-overview-filterCard--inset .admin-table-panel__desc,
+.admin-overview-tableCard--inset .admin-table-panel__desc {
+  max-width: 38rem;
+}
+
+.admin-overview-filterCard--inset .doodle-filter-field {
+  width: min(100%, 94%);
+  margin-inline: auto;
+}
+
+.admin-overview-stats--inset {
+  gap: 16px;
+}
+
+.admin-overview-stats--inset .doodle-stat-card {
+  min-height: 178px;
+}
+
+.admin-overview-stats--inset .doodle-stat-card__header,
+.admin-overview-stats--inset .doodle-stat-card__body {
+  width: min(100%, 84%);
+  margin-inline: auto;
+}
+
+.admin-overview-stats--inset .doodle-stat-card__header {
+  padding-top: 26px !important;
+}
+
+.admin-overview-stats--inset .doodle-stat-card__body {
+  padding-bottom: 26px !important;
+}
+
+.admin-overview-stats--inset .doodle-stat-card__hint {
+  max-width: 14rem;
+}
+
+.admin-overview-tableCard--inset .admin-table-scroll {
+  width: min(100%, 96%);
+  margin-inline: auto;
+}
+
+.admin-overview-tableCard--inset .admin-overview-tableCard__eyebrow {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 1380px) {
+  .admin-overview-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-overview-filterCard--inset .admin-overview-filterCard__header,
+  .admin-overview-filterCard--inset .admin-overview-filterCard__content,
+  .admin-overview-tableCard--inset .admin-overview-tableCard__header,
+  .admin-overview-tableCard--inset .admin-overview-tableCard__content {
+    width: min(100%, 92%);
+  }
+
+  .admin-overview-stats--inset .doodle-stat-card__header,
+  .admin-overview-stats--inset .doodle-stat-card__body {
+    width: min(100%, 88%);
+  }
+}
+
+/* Shared module hierarchy tuning: different depths for info blocks, control panels, and work surfaces. */
+.app-shell-page .doodle-stat-card,
+.app-shell-page .workspace-summaryChip {
+  background: linear-gradient(180deg, rgba(250, 248, 252, 0.94) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
+  border-color: rgba(226, 220, 236, 0.96) !important;
+  box-shadow: 0 8px 20px rgba(91, 83, 111, 0.04) !important;
+}
+
+.app-shell-page .doodle-stat-card::after,
+.app-shell-page .workspace-summaryChip::after {
+  opacity: 0.55;
+}
+
+.app-shell-page .doodle-stats-grid .doodle-stat-card:hover,
+.app-shell-page .workspace-summaryChip:hover {
+  transform: none !important;
+  border-color: rgba(226, 220, 236, 0.96) !important;
+  box-shadow: 0 8px 20px rgba(91, 83, 111, 0.04) !important;
+}
+
+.app-shell-page .doodle-guide-card,
+.app-shell-page .doodle-callout,
+.app-shell-page .admin-export-card--notes .admin-export-noteList > div,
+.app-shell-page .admin-export-card--placeholder {
+  background: linear-gradient(180deg, rgba(248, 246, 251, 0.92) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
+  border-color: rgba(226, 220, 236, 0.9) !important;
+  box-shadow: 0 10px 24px rgba(91, 83, 111, 0.05) !important;
+}
+
+.app-shell-page .doodle-guide-card:hover,
+.app-shell-page .doodle-callout:hover,
+.app-shell-page .admin-export-card--notes .admin-export-noteList > div:hover,
+.app-shell-page .admin-export-card--placeholder:hover {
+  transform: none !important;
+  border-color: rgba(226, 220, 236, 0.9) !important;
+  box-shadow: 0 10px 24px rgba(91, 83, 111, 0.05) !important;
+}
+
+.app-shell-page :is(.admin-filter-panel, .admin-side-panel, .workspace-filterPanel, .admin-overview-filterCard--inset, .admin-export-card--primary, .admin-export-card--status) {
+  background: linear-gradient(180deg, rgba(247, 245, 250, 0.9) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
+  border-color: rgba(221, 214, 232, 0.96) !important;
+  box-shadow: 0 12px 26px rgba(91, 83, 111, 0.05) !important;
+}
+
+.app-shell-page :is(.admin-table-panel, .workspace-tablePanel, .admin-overview-tableCard, .admin-records-tablePanel, .admin-export-card--notes) {
+  background: linear-gradient(180deg, rgba(255, 254, 252, 0.99) 0%, rgba(255, 255, 255, 1) 100%) !important;
+  border-color: rgba(214, 208, 227, 0.94) !important;
+  box-shadow: 0 18px 36px rgba(91, 83, 111, 0.06) !important;
+}
+
+.app-shell-page .doodle-stat-card__label,
+.app-shell-page .workspace-summaryChip span,
+.app-shell-page .admin-export-create__eyebrow,
+.app-shell-page .doodle-hero__eyebrow {
+  color: #8b94a7;
+}
+
+.app-shell-page .doodle-stat-card__hint,
+.app-shell-page .workspace-tablePanel__metaText,
+.app-shell-page .admin-table-panel__desc,
+.app-shell-page .doodle-guide-card p,
+.app-shell-page .doodle-callout p {
+  color: #6f7b8f;
+}
+
+.app-shell-page .doodle-guide-card__step {
+  background: rgba(239, 235, 246, 0.9) !important;
+  color: #736b85 !important;
+}
+
+.app-shell-page .workspace-summaryChip,
+.app-shell-page .doodle-guide-card,
+.app-shell-page .doodle-callout,
+.app-shell-page .admin-export-card--notes .admin-export-noteList > div,
+.app-shell-page .admin-export-card--placeholder {
+  cursor: default;
+}
+
+/* Admin records page tuning: tighten filter card, unify summary rhythm, and give the list panel a stronger work-surface hierarchy. */
+.admin-records-page--inset {
+  gap: 22px;
+}
+
+.admin-records-hero--inset {
+  grid-template-columns: minmax(0, 1.16fr) minmax(320px, 0.84fr);
+  align-items: start;
+}
+
+.admin-records-filterPanel--inset .admin-records-filterPanel__header,
+.admin-records-filterPanel--inset .admin-records-filterPanel__content,
+.admin-records-tablePanel--inset .admin-records-tablePanel__header,
+.admin-records-tablePanel--inset .admin-records-tablePanel__content {
+  width: min(100%, 88%);
+  margin-inline: auto;
+}
+
+.admin-records-filterPanel--inset .admin-records-filterPanel__header {
+  padding-top: 28px !important;
+}
+
+.admin-records-filterPanel--inset .admin-records-filterPanel__content {
+  gap: 14px;
+  padding-top: 6px !important;
+  padding-bottom: 24px !important;
+}
+
+.admin-records-filterPanel--inset .admin-table-panel__desc {
+  max-width: 34rem;
+}
+
+.admin-records-filterPanel--inset .doodle-filter-field {
+  width: min(100%, 94%);
+  margin-inline: auto;
+}
+
+.admin-records-summaryGrid--inset {
+  gap: 14px;
+}
+
+.admin-records-summaryGrid--inset .workspace-summaryChip {
+  min-height: 126px;
+}
+
+.admin-records-summaryGrid--inset .workspace-summaryChip span,
+.admin-records-summaryGrid--inset .workspace-summaryChip strong {
+  width: min(100%, 86%);
+  margin-inline: auto;
+}
+
+.admin-records-tablePanel--inset .admin-records-tablePanel__header {
+  padding-top: 30px !important;
+}
+
+.admin-records-tablePanel--inset .admin-records-tablePanel__content {
+  padding-top: 8px !important;
+  padding-bottom: 28px !important;
+}
+
+.admin-records-tablePanel--inset .workspace-tablePanel__meta {
+  justify-content: flex-end;
+}
+
+.admin-records-tablePanel--inset .admin-table-panel__desc {
+  max-width: 40rem;
+}
+
+.admin-records-tablePanel--inset .admin-table-scroll {
+  width: min(100%, 96%);
+  margin-inline: auto;
+}
+
+@media (max-width: 1380px) {
+  .admin-records-hero--inset {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-records-filterPanel--inset .admin-records-filterPanel__header,
+  .admin-records-filterPanel--inset .admin-records-filterPanel__content,
+  .admin-records-tablePanel--inset .admin-records-tablePanel__header,
+  .admin-records-tablePanel--inset .admin-records-tablePanel__content {
+    width: min(100%, 92%);
+  }
+
+  .admin-records-summaryGrid--inset .workspace-summaryChip span,
+  .admin-records-summaryGrid--inset .workspace-summaryChip strong {
+    width: min(100%, 90%);
+  }
+}
+
+/* Restore dedicated scrolling for the basic info block without reverting the whole form shell. */
+.app-shell-page .expense-art-sectionScroll--basic {
+  display: grid;
+  gap: 16px;
+  max-height: 360px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(184, 173, 207, 0.78) transparent;
+}
+
+.app-shell-page .expense-art-sectionScroll--basic::-webkit-scrollbar {
+  width: 10px;
+}
+
+.app-shell-page .expense-art-sectionScroll--basic::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-shell-page .expense-art-sectionScroll--basic::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  border: 2px solid rgba(246, 244, 250, 0.92);
+  background: rgba(184, 173, 207, 0.78);
+}
+
+/* Final status-card and basic-form fixes: restore internal scroll and stabilize narrow config cards. */
+.app-shell-page .expense-art-sectionBlock--basic {
+  padding-bottom: 18px;
+}
+
+.app-shell-page .expense-art-sectionBlock--basic .expense-art-sectionHead {
+  padding-right: 10px;
+}
+
+.app-shell-page .expense-art-sectionScroll--basic {
+  display: grid;
+  gap: 16px;
+  max-height: 348px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(184, 173, 207, 0.78) transparent;
+}
+
+.app-shell-page .expense-art-sectionScroll--basic .expense-art-grid,
+.app-shell-page .expense-art-sectionScroll--basic .expense-art-inlineNoteRow,
+.app-shell-page .expense-art-sectionScroll--basic > .expense-art-field {
+  width: 100%;
+}
+
+.app-shell-page .admin-config-statusCard {
+  display: grid;
+  gap: 18px;
+  min-height: 318px;
+  padding: 24px 20px 22px !important;
+  align-content: start;
+}
+
+.app-shell-page .admin-config-statusCard__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 14px;
+}
+
+.app-shell-page .admin-config-statusCard__copy {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.app-shell-page .admin-config-statusCard__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.45;
+  color: #0f172a;
+}
+
+.app-shell-page .admin-config-statusCard__description {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.9;
+  color: #64748b;
+}
+
+.app-shell-page .admin-config-statusCard__toggleRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  margin-top: auto;
+}
+
+.app-shell-page .admin-config-statusCard__stateText {
+  display: block;
+  max-width: 10em;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: #475569;
+}
+
+.app-shell-page .admin-config-toggle {
+  flex: none;
+}
+
+@media (max-width: 1180px) {
+  .app-shell-page .admin-config-statusCard {
+    min-height: 0;
+  }
+
+  .app-shell-page .admin-config-statusCard__head {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell-page .admin-config-statusCard__toggleRow {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .app-shell-page .admin-config-statusCard__stateText {
+    max-width: none;
+  }
+}
+
+/* Final basic-info scroll behavior: the Basic Info card itself owns a fixed internal scrollbar. */
+.app-shell-page .expense-art-sectionBlock--basic {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 472px;
+  max-height: 472px;
+}
+
+.app-shell-page .expense-art-sectionBlock--basic .expense-art-sectionHead {
+  margin-bottom: 4px;
+}
+
+.app-shell-page .expense-art-sectionBlock--basic .expense-art-sectionScroll--basic {
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: 12px;
+  padding-bottom: 8px;
+  align-content: start;
+}
+
+.app-shell-page .expense-art-sectionBlock--basic .expense-art-sectionScroll--basic::-webkit-scrollbar {
+  width: 11px;
+}
+
+.app-shell-page .expense-art-sectionBlock--basic .expense-art-sectionScroll--basic::-webkit-scrollbar-thumb {
+  border: 2px solid rgba(248, 246, 251, 0.96);
+}
+
+@media (max-width: 1080px) {
+  .app-shell-page .expense-art-sectionBlock--basic {
+    min-height: 436px;
+    max-height: 436px;
+  }
+}
+
+/* Final expense form scroll ownership: the outer form shell scrolls across basic, detail, and attachment sections. */
+.app-shell-page .expense-art-formShell {
+  display: grid;
+  min-height: 0;
+}
+
+.app-shell-page .expense-art-formShell__scroll {
+  height: 620px !important;
+  min-height: 620px !important;
+  max-height: 620px !important;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  padding-right: 18px !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(184, 173, 207, 0.82) transparent;
+}
+
+.app-shell-page .expense-art-formShell__scroll::-webkit-scrollbar {
+  width: 12px;
+}
+
+.app-shell-page .expense-art-formShell__scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-shell-page .expense-art-formShell__scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  border: 2px solid rgba(248, 246, 251, 0.96);
+  background: rgba(184, 173, 207, 0.82);
+}
+
+.app-shell-page .expense-art-sectionBlock--basic {
+  min-height: 0;
+  max-height: none;
+  grid-template-rows: none;
+}
+
+.app-shell-page .expense-art-sectionBlock--basic .expense-art-sectionScroll--basic {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
+@media (max-width: 1080px) {
+  .app-shell-page .expense-art-formShell__scroll {
+    height: 560px !important;
+    min-height: 560px !important;
+    max-height: 560px !important;
+    padding-right: 14px !important;
+  }
+}
+
+/* Final stat-card/detail refinements: responsive amount values, inset detail cards, and employee detail scroll shell. */
+.app-shell-page .doodle-stat-card__value {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: clamp(2rem, 2.6vw, 3rem);
+}
+
+.app-shell-page .doodle-stat-card__value--compact {
+  font-size: clamp(1.72rem, 2.1vw, 2.5rem);
+  letter-spacing: -0.05em;
+}
+
+.app-shell-page .doodle-stat-card__value--xcompact {
+  font-size: clamp(1.46rem, 1.8vw, 2.1rem);
+  letter-spacing: -0.04em;
+}
+
+.app-shell-page .doodle-detail-page--inset {
+  gap: 22px;
+}
+
+.app-shell-page .doodle-detail-hero--inset {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.78fr);
+  align-items: start;
+}
+
+.app-shell-page .doodle-callout--detail {
+  max-width: none;
+  padding: 20px 22px;
+}
+
+.app-shell-page .doodle-callout--detail > * {
+  width: min(100%, 86%);
+  margin-inline: auto;
+}
+
+.app-shell-page .doodle-detail-card {
+  overflow: hidden;
+}
+
+.app-shell-page .doodle-detail-card__header,
+.app-shell-page .doodle-detail-card__content,
+.app-shell-page .doodle-detail-card__metaGrid {
+  width: min(100%, 90%);
+  margin-inline: auto;
+}
+
+.app-shell-page .doodle-detail-card__header {
+  padding-top: 28px !important;
+  padding-bottom: 10px !important;
+}
+
+.app-shell-page .doodle-detail-card__content,
+.app-shell-page .doodle-detail-card__metaGrid {
+  padding-top: 8px !important;
+  padding-bottom: 28px !important;
+}
+
+.app-shell-page .doodle-detail-card__metaGrid {
+  gap: 18px 34px;
+}
+
+.app-shell-page .doodle-detail-card__fields p {
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(228, 223, 237, 0.96);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.76);
+  line-height: 1.75;
+}
+
+.app-shell-page .doodle-detail-card__attachments .doodle-attachment-section,
+.app-shell-page .doodle-detail-card__attachments .doodle-attachment-empty,
+.app-shell-page .doodle-detail-card__attachments .doodle-attachment-list {
+  width: min(100%, 96%);
+  margin-inline: auto;
+}
+
+.app-shell-page .workspace-detailPage--scrollShell {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(184, 173, 207, 0.72) transparent;
+}
+
+.app-shell-page .workspace-detailPage__scroll {
+  display: contents;
+}
+
+.app-shell-page .workspace-detailPage__scroll::-webkit-scrollbar {
+  width: 12px;
+}
+
+.app-shell-page .workspace-detailPage__scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-shell-page .workspace-detailPage__scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  border: 2px solid rgba(248, 246, 251, 0.96);
+  background: rgba(184, 173, 207, 0.82);
+}
+
+.app-shell-page .workspace-detailPage--employee {
+  gap: 20px;
+}
+
+.app-shell-page .workspace-detailPage--employee .workspace-detailHero,
+.app-shell-page .workspace-detailPage--employee .workspace-detailCard,
+.app-shell-page .workspace-detailPage--employee .workspace-detailCallout {
+  width: min(100%, 92%);
+  margin-inline: auto;
+}
+
+.app-shell-page .workspace-detailPage--employee .workspace-detailCard__header,
+.app-shell-page .workspace-detailPage--employee .workspace-detailCard > div:last-child {
+  width: min(100%, 88%);
+  margin-inline: auto;
+}
+
+.app-shell-page .workspace-detailPage--employee .workspace-detailCard__header {
+  padding-top: 28px !important;
+  padding-bottom: 10px !important;
+}
+
+.app-shell-page .workspace-detailPage--employee .workspace-detailCard > div:last-child {
+  padding-top: 8px !important;
+  padding-bottom: 26px !important;
+}
+
+.app-shell-page .workspace-detailPage--employee .workspace-detailFields {
+  gap: 14px;
+}
+
+.app-shell-page .workspace-detailPage--employee .workspace-detailFields p,
+.app-shell-page .workspace-detailPage--employee .workspace-detailAttachmentItem {
+  padding: 16px 18px;
+  border-radius: 20px;
+}
+
+@media (max-width: 1080px) {
+  .app-shell-page .workspace-detailPage--scrollShell {
+    padding-right: 8px;
+  }
+}
+
+/* Final detail-scroll refinement: both admin and employee detail workspaces scroll internally with stable gutters. */
+.app-shell-page .doodle-detail-page--scrollShell,
+.app-shell-page .workspace-detailPage--scrollShell {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(184, 173, 207, 0.72) transparent;
+}
+
+.app-shell-page .doodle-detail-page__scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(184, 173, 207, 0.72) transparent;
+}
+
+.app-shell-page .doodle-detail-page__scroll {
+  height: 620px;
+  min-height: 620px;
+  max-height: 620px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+}
+
+.app-shell-page .doodle-detail-page__scroll::-webkit-scrollbar,
+.app-shell-page .workspace-detailPage--scrollShell::-webkit-scrollbar {
+  width: 8px;
+}
+
+.app-shell-page .doodle-detail-page__scroll::-webkit-scrollbar-track,
+.app-shell-page .workspace-detailPage--scrollShell::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-shell-page .doodle-detail-page__scroll::-webkit-scrollbar-thumb,
+.app-shell-page .workspace-detailPage--scrollShell::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  border: 1px solid rgba(248, 246, 251, 0.96);
+  background: rgba(184, 173, 207, 0.72);
+}
+
+
+
+@media (max-width: 1080px) {
+  .app-shell-page .doodle-detail-page__scroll {
+    height: 560px;
+    min-height: 560px;
+    max-height: 560px;
+    padding-right: 8px;
+  }
+
+  .app-shell-page .workspace-detailPage--scrollShell {
+    padding-right: 8px;
+  }
+}
+
+
+

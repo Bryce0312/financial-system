@@ -1,4 +1,4 @@
-import { clearSession, readSession } from "./auth";
+﻿import { clearSession, readSession } from "./auth";
 
 function resolveApiUrl() {
   if (process.env.NEXT_PUBLIC_API_URL) {
@@ -69,6 +69,21 @@ export async function downloadApiFile(path: string, filename: string) {
   link.click();
   link.remove();
   window.URL.revokeObjectURL(url);
+}
+
+export async function openApiFile(path: string) {
+  const response = await fetch(`${resolveApiUrl()}${path}`, {
+    method: "GET",
+    headers: buildHeaders(),
+    cache: "no-store"
+  });
+
+  await handleResponseError(response);
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  window.open(url, "_blank", "noopener,noreferrer");
+  window.setTimeout(() => window.URL.revokeObjectURL(url), 60_000);
 }
 
 export function getApiUrl() {

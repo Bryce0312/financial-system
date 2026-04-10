@@ -17,6 +17,7 @@ import { getMonthRange } from "@/common/utils/date-range";
 import { decimalToNumber, optionalDecimalToNumber } from "@/common/utils/number";
 import { PrismaService } from "@/prisma/prisma.service";
 
+import { AttachmentsService } from "../attachments/attachments.service";
 import { RulesService } from "../rules/rules.service";
 
 const expenseInclude = {
@@ -37,7 +38,8 @@ const expenseInclude = {
 export class ExpensesService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly rulesService: RulesService
+    private readonly rulesService: RulesService,
+    private readonly attachmentsService: AttachmentsService
   ) {}
 
   async create(input: CreateExpenseInput, user: AuthenticatedUser) {
@@ -388,11 +390,13 @@ export class ExpensesService {
         fileType: attachment.fileType,
         fileSize: attachment.fileSize,
         isInvoiceFile: attachment.isInvoiceFile,
-        previewUrl: `/attachments/files/${attachment.id}`
+        previewUrl: `/attachments/files/${attachment.id}`,
+        publicPreviewUrl: this.attachmentsService.buildPreviewAccessUrl(attachment.id)
       })),
       detail
     };
   }
 }
+
 
 

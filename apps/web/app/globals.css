@@ -5213,3 +5213,420 @@ button.admin-side-panel__secondary:active {
 
 
 
+
+.app-shell-page .admin-expense-detailPage {
+  gap: 20px;
+}
+
+.app-shell-page .admin-expense-detailPage__hero,
+.app-shell-page .admin-expense-detailPage__card {
+  width: min(100%, 92%);
+  margin-inline: auto;
+}
+
+.app-shell-page .admin-expense-detailPage__titleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.app-shell-page .admin-expense-detailPage__badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.app-shell-page .admin-expense-detailPage__content {
+  display: grid;
+  gap: 20px;
+}
+
+.app-shell-page .admin-expense-detailPage__metaList,
+.app-shell-page .admin-expense-detailPage__fieldList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.app-shell-page .admin-expense-detailPage__metaList div,
+.app-shell-page .admin-expense-detailPage__fieldList div,
+.app-shell-page .admin-expense-detailPage__attachmentItem {
+  border: 1px solid rgba(228, 223, 237, 0.96);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.76);
+  padding: 16px 18px;
+}
+
+.app-shell-page .admin-expense-detailPage__metaList dt,
+.app-shell-page .admin-expense-detailPage__fieldList dt,
+.app-shell-page .admin-expense-detailPage__anomalyBlock h2 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a93ab;
+}
+
+.app-shell-page .admin-expense-detailPage__metaList dd,
+.app-shell-page .admin-expense-detailPage__fieldList dd {
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #172554;
+}
+
+.app-shell-page .admin-expense-detailPage__anomalyBlock {
+  display: grid;
+  gap: 12px;
+}
+
+.app-shell-page .admin-expense-detailPage__attachmentList {
+  display: grid;
+  gap: 12px;
+}
+
+.app-shell-page .admin-expense-detailPage__attachmentItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.app-shell-page .admin-expense-detailPage__attachmentInfo {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.app-shell-page .admin-expense-detailPage__attachmentTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-shell-page .admin-expense-detailPage__attachmentTitle > span {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  word-break: break-all;
+}
+
+.app-shell-page .admin-expense-detailPage__attachmentInfo p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.app-shell-page .admin-expense-detailPage__attachmentActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1080px) {
+  .app-shell-page .admin-expense-detailPage__metaList,
+  .app-shell-page .admin-expense-detailPage__fieldList {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .app-shell-page .admin-expense-detailPage__titleRow,
+  .app-shell-page .admin-expense-detailPage__attachmentItem {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .app-shell-page .admin-expense-detailPage__attachmentActions {
+    justify-content: flex-start;
+  }
+}
+
+.app-shell-page .employee-expense-detailPage {
+  gap: 20px;
+}
+
+.app-shell-page .employee-expense-detailPage__hero,
+.app-shell-page .employee-expense-detailPage__card {
+  width: min(100%, 92%);
+  margin-inline: auto;
+}
+
+.app-shell-page .employee-expense-detailPage__titleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.app-shell-page .employee-expense-detailPage__badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.app-shell-page .employee-expense-detailPage__content {
+  display: grid;
+  gap: 20px;
+}
+
+.app-shell-page .employee-expense-detailPage__metaList,
+.app-shell-page .employee-expense-detailPage__fieldList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.app-shell-page .employee-expense-detailPage__metaList div,
+.app-shell-page .employee-expense-detailPage__fieldList div,
+.app-shell-page .employee-expense-detailPage__attachmentItem {
+  border: 1px solid rgba(228, 223, 237, 0.96);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 16px 18px;
+}
+
+.app-shell-page .employee-expense-detailPage__metaList dt,
+.app-shell-page .employee-expense-detailPage__fieldList dt,
+.app-shell-page .employee-expense-detailPage__anomalyBlock h2 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a93ab;
+}
+
+.app-shell-page .employee-expense-detailPage__metaList dd,
+.app-shell-page .employee-expense-detailPage__fieldList dd {
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #172554;
+}
+
+.app-shell-page .employee-expense-detailPage__anomalyBlock {
+  display: grid;
+  gap: 12px;
+}
+
+.app-shell-page .employee-expense-detailPage__attachmentList {
+  display: grid;
+  gap: 12px;
+}
+
+.app-shell-page .employee-expense-detailPage__attachmentItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.app-shell-page .employee-expense-detailPage__attachmentInfo {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.app-shell-page .employee-expense-detailPage__attachmentTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-shell-page .employee-expense-detailPage__attachmentTitle > span {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  word-break: break-all;
+}
+
+.app-shell-page .employee-expense-detailPage__attachmentInfo p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.app-shell-page .employee-expense-detailPage__attachmentActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1080px) {
+  .app-shell-page .employee-expense-detailPage__metaList,
+  .app-shell-page .employee-expense-detailPage__fieldList {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .app-shell-page .employee-expense-detailPage__titleRow,
+  .app-shell-page .employee-expense-detailPage__attachmentItem {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .app-shell-page .employee-expense-detailPage__attachmentActions {
+    justify-content: flex-start;
+  }
+}
+
+.app-shell-page .single-expense-detailPage {
+  gap: 20px;
+}
+
+.app-shell-page .single-expense-detailPage__hero,
+.app-shell-page .single-expense-detailPage__panel {
+  width: min(100%, 92%);
+  margin-inline: auto;
+}
+
+.app-shell-page .single-expense-detailPage__titleRow,
+.app-shell-page .single-expense-detailPage__sectionHead,
+.app-shell-page .single-expense-detailPage__attachmentItem,
+.app-shell-page .single-expense-detailPage__attachmentNameRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.app-shell-page .single-expense-detailPage__content,
+.app-shell-page .single-expense-detailPage__inlineBlock,
+.app-shell-page .single-expense-detailPage__attachmentInfo {
+  display: grid;
+  gap: 14px;
+}
+
+.app-shell-page .single-expense-detailPage__badgeRow,
+.app-shell-page .single-expense-detailPage__attachmentActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.app-shell-page .single-expense-detailPage__metaList,
+.app-shell-page .single-expense-detailPage__fieldList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.app-shell-page .single-expense-detailPage__metaList div,
+.app-shell-page .single-expense-detailPage__fieldList div,
+.app-shell-page .single-expense-detailPage__attachmentItem {
+  padding: 14px 16px;
+  border: 1px solid rgba(228, 223, 237, 0.96);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.app-shell-page .single-expense-detailPage__inlineBlock {
+  padding-top: 6px;
+  border-top: 1px solid rgba(228, 223, 237, 0.7);
+}
+
+.app-shell-page .single-expense-detailPage__inlineBlock > strong,
+.app-shell-page .single-expense-detailPage__metaList dt,
+.app-shell-page .single-expense-detailPage__fieldList dt,
+.app-shell-page .single-expense-detailPage__sectionHead span {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a93ab;
+}
+
+.app-shell-page .single-expense-detailPage__metaList dd,
+.app-shell-page .single-expense-detailPage__fieldList dd {
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #172554;
+}
+
+.app-shell-page .single-expense-detailPage__attachmentList {
+  display: grid;
+  gap: 12px;
+}
+
+.app-shell-page .single-expense-detailPage__attachmentNameRow > span {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  word-break: break-all;
+}
+
+.app-shell-page .single-expense-detailPage__attachmentInfo p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+@media (max-width: 1080px) {
+  .app-shell-page .single-expense-detailPage__metaList,
+  .app-shell-page .single-expense-detailPage__fieldList {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .app-shell-page .single-expense-detailPage__titleRow,
+  .app-shell-page .single-expense-detailPage__sectionHead,
+  .app-shell-page .single-expense-detailPage__attachmentItem,
+  .app-shell-page .single-expense-detailPage__attachmentNameRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.app-shell-page .single-expense-detailPage.workspace-detailPage--scrollShell {
+  height: calc(100vh - 112px);
+  min-height: calc(100vh - 112px);
+  max-height: calc(100vh - 112px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-content: start;
+  padding-right: 10px;
+  padding-bottom: 28px;
+}
+
+.app-shell-page .single-expense-detailPage__panel {
+  overflow: visible !important;
+}
+
+.app-shell-page .single-expense-detailPage__content {
+  gap: 12px;
+}
+
+.app-shell-page .single-expense-detailPage__metaList,
+.app-shell-page .single-expense-detailPage__fieldList {
+  gap: 10px;
+}
+
+.app-shell-page .single-expense-detailPage__metaList div,
+.app-shell-page .single-expense-detailPage__fieldList div,
+.app-shell-page .single-expense-detailPage__attachmentItem {
+  padding: 12px 14px;
+}
+
+.app-shell-page .single-expense-detailPage__inlineBlock {
+  gap: 10px;
+  padding-top: 2px;
+}
+
+.app-shell-page .single-expense-detailPage__attachmentList {
+  gap: 10px;
+}
+
+@media (max-width: 1080px) {
+  .app-shell-page .single-expense-detailPage.workspace-detailPage--scrollShell {
+    height: calc(100vh - 98px);
+    min-height: calc(100vh - 98px);
+    max-height: calc(100vh - 98px);
+    padding-right: 8px;
+    padding-bottom: 20px;
+  }
+}

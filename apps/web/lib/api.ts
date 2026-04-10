@@ -72,18 +72,31 @@ export async function downloadApiFile(path: string, filename: string) {
 }
 
 export async function openApiFile(path: string) {
-  const response = await fetch(`${resolveApiUrl()}${path}`, {
-    method: "GET",
-    headers: buildHeaders(),
-    cache: "no-store"
-  });
+  const previewWindow = typeof window !== "undefined" ? window.open("", "_blank", "noopener,noreferrer") : null;
 
-  await handleResponseError(response);
+  try {
+    const response = await fetch(`${resolveApiUrl()}${path}`, {
+      method: "GET",
+      headers: buildHeaders(),
+      cache: "no-store"
+    });
 
-  const blob = await response.blob();
-  const url = window.URL.createObjectURL(blob);
-  window.open(url, "_blank", "noopener,noreferrer");
-  window.setTimeout(() => window.URL.revokeObjectURL(url), 60_000);
+    await handleResponseError(response);
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    if (previewWindow) {
+      previewWindow.location.href = url;
+    } else {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    window.setTimeout(() => window.URL.revokeObjectURL(url), 60_000);
+  } catch (error) {
+    previewWindow?.close();
+    throw error;
+  }
 }
 
 export function getApiUrl() {

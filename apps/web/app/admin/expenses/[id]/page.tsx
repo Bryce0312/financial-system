@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
@@ -8,8 +8,7 @@ import { RoleCode } from "@financial-system/types";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@financial-system/ui";
 
 import { AppShell } from "@/components/app-shell";
-import { apiFetch, getApiUrl } from "@/lib/api";
-import { readSession } from "@/lib/auth";
+import { apiFetch, downloadApiFile, openApiFile } from "@/lib/api";
 import { currency, shortDate } from "@/lib/format";
 
 function isPreviewableImage(fileType?: string, fileName?: string) {
@@ -27,7 +26,7 @@ function isPdf(fileType?: string, fileName?: string) {
 function getAttachmentKindLabel(fileType?: string, fileName?: string) {
   if (isPreviewableImage(fileType, fileName)) return "图片";
   if (isPdf(fileType, fileName)) return "PDF";
-  return "其他文件";
+  return "文件";
 }
 
 function formatFileSize(fileSize?: number) {
@@ -35,40 +34,6 @@ function formatFileSize(fileSize?: number) {
   if (fileSize < 1024) return `${fileSize} B`;
   if (fileSize < 1024 * 1024) return `${(fileSize / 1024).toFixed(1)} KB`;
   return `${(fileSize / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-async function getProtectedAttachmentBlob(path: string) {
-  const session = readSession();
-  const response = await fetch(`${getApiUrl()}${path}`, {
-    method: "GET",
-    headers: session?.accessToken ? { Authorization: `Bearer ${session.accessToken}` } : {},
-    cache: "no-store"
-  });
-
-  if (!response.ok) {
-    throw new Error("附件读取失败，请重新登录后重试");
-  }
-
-  return response.blob();
-}
-
-async function openProtectedAttachment(path: string, fileName: string, inline = true) {
-  const blob = await getProtectedAttachmentBlob(path);
-  const objectUrl = window.URL.createObjectURL(blob);
-
-  if (inline) {
-    window.open(objectUrl, "_blank", "noopener,noreferrer");
-    window.setTimeout(() => window.URL.revokeObjectURL(objectUrl), 60_000);
-    return;
-  }
-
-  const link = document.createElement("a");
-  link.href = objectUrl;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.URL.revokeObjectURL(objectUrl);
 }
 
 type AttachmentItem = {
@@ -79,53 +44,6 @@ type AttachmentItem = {
   isInvoiceFile?: boolean;
   previewUrl: string;
 };
-
-function AttachmentActionRow({
-  item,
-  busy,
-  onPreview,
-  onDownload
-}: {
-  item: AttachmentItem;
-  busy: boolean;
-  onPreview: (item: AttachmentItem) => void;
-  onDownload: (item: AttachmentItem) => void;
-}) {
-  const previewable = isPreviewableImage(item.fileType, item.fileName) || isPdf(item.fileType, item.fileName);
-
-  return (
-    <div className={`doodle-attachment-item${item.isInvoiceFile ? " doodle-attachment-item--invoice" : ""}`}>
-      <div className="grid gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-semibold text-slate-950">{item.fileName}</p>
-          {item.isInvoiceFile ? <Badge variant="warning">发票</Badge> : null}
-          <Badge variant="default">{getAttachmentKindLabel(item.fileType, item.fileName)}</Badge>
-          {previewable ? <Badge variant="success">支持预览</Badge> : null}
-        </div>
-        <p className="doodle-attachment-item__meta">
-          {item.fileType || "未知类型"} · {formatFileSize(item.fileSize)}
-        </p>
-        <p className="doodle-attachment-item__hint">
-          {previewable
-            ? item.isInvoiceFile
-              ? "建议先预览核对票面，再下载归档。"
-              : "可直接预览附件内容，也可以下载留存。"
-            : "当前文件类型建议直接下载后查看。"}
-        </p>
-      </div>
-      <div className="doodle-attachment-actions">
-        {previewable ? (
-          <Button variant="outline" className="min-w-[112px]" disabled={busy} onClick={() => onPreview(item)}>
-            {busy ? "处理中..." : isPdf(item.fileType, item.fileName) ? "预览 PDF" : "预览图片"}
-          </Button>
-        ) : null}
-        <Button variant="primary" className="min-w-[112px]" disabled={busy} onClick={() => onDownload(item)}>
-          {busy ? "处理中..." : item.isInvoiceFile ? "下载发票" : "下载附件"}
-        </Button>
-      </div>
-    </div>
-  );
-}
 
 export default function AdminExpenseDetailPage() {
   const params = useParams<{ id: string }>();
@@ -138,17 +56,26 @@ export default function AdminExpenseDetailPage() {
   });
   const data = query.data;
 
-  const detailEntries = useMemo(() => Object.entries(data?.detail || {}), [data?.detail]);
+  const detailEntries = Object.entries(data?.detail || {});
   const attachments: AttachmentItem[] = data?.attachments || [];
-  const invoiceAttachments = attachments.filter((item) => item.isInvoiceFile);
-  const otherAttachments = attachments.filter((item) => !item.isInvoiceFile);
 
-  async function handleAttachmentAction(item: AttachmentItem, inline: boolean) {
+  async function handleAttachmentPreview(item: AttachmentItem) {
     try {
       setBusyAttachmentId(item.id);
-      await openProtectedAttachment(item.previewUrl, item.fileName, inline);
+      await openApiFile(item.previewUrl);
     } catch (error) {
-      window.alert(error instanceof Error ? error.message : "附件处理失败，请稍后重试");
+      window.alert(error instanceof Error ? error.message : "附件打开失败，请稍后重试");
+    } finally {
+      setBusyAttachmentId(null);
+    }
+  }
+
+  async function handleAttachmentDownload(item: AttachmentItem) {
+    try {
+      setBusyAttachmentId(item.id);
+      await downloadApiFile(item.previewUrl, item.fileName);
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "附件下载失败，请稍后重试");
     } finally {
       setBusyAttachmentId(null);
     }
@@ -164,126 +91,102 @@ export default function AdminExpenseDetailPage() {
 
   return (
     <AppShell requireRole={RoleCode.ADMIN}>
-      <div className="doodle-detail-page doodle-detail-page--inset doodle-detail-page--scrollShell">
-        <div className="doodle-detail-page__scroll">
-          <section className="doodle-detail-hero doodle-detail-hero--inset">
-            <div>
-              <p className="doodle-hero__eyebrow">EXPENSE DETAIL</p>
-              <h1 className="doodle-hero__title">报销详情</h1>
-              <p className="doodle-hero__desc">管理端可以快速查看异常说明、发票附件和扩展字段，附件会按“发票优先”进行区分。</p>
-            </div>
-            <div className="doodle-callout doodle-callout--detail">
-              <strong>查看建议</strong>
-              <p>先核对发票，再预览其它附件，最后确认异常标签与扩展信息是否一致。</p>
-            </div>
-          </section>
+      <div className="workspace-detailPage workspace-detailPage--scrollShell single-expense-detailPage">
+        <section className="workspace-detailHero single-expense-detailPage__hero">
+          <div>
+            <p className="doodle-hero__eyebrow">CLAIM DETAIL</p>
+            <h1 className="doodle-hero__title">报销详情</h1>
+          </div>
+        </section>
 
-          <Card className="doodle-surface doodle-detail-card">
-            <CardHeader className="doodle-card-header doodle-detail-card__header">
+        <Card className="doodle-surface workspace-detailCard single-expense-detailPage__panel">
+          <CardHeader className="doodle-card-header workspace-detailCard__header">
+            <div className="single-expense-detailPage__titleRow">
               <CardTitle>{data.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="doodle-detail-metaGrid doodle-detail-card__metaGrid">
-              <p>申请人：{data.applicantName}</p>
-              <p>类别：{data.categoryName}</p>
-              <p>金额：{currency(data.amountTotal)}</p>
-              <p>费用日期：{shortDate(data.expenseDate)}</p>
-              <p>状态：{data.status}</p>
-              <p>发票状态：{data.invoiceAttachmentStatus}</p>
-              <p>是否有发票：{data.hasInvoice ? "有" : "无"}</p>
-              <p>必传发票：{data.invoiceRequiredSnapshot ? "是" : "否"}</p>
-              <p>超额金额：{currency(data.overLimitAmount)}</p>
-            </CardContent>
-          </Card>
+              <div className="single-expense-detailPage__badgeRow">
+                <Badge variant="default">{data.status}</Badge>
+                <Badge variant={data.anomalies?.length ? "warning" : "success"}>
+                  {data.anomalies?.length ? `${data.anomalies.length} 个异常` : "无异常"}
+                </Badge>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="single-expense-detailPage__content">
+            <dl className="single-expense-detailPage__metaList">
+              <div><dt>申请人</dt><dd>{data.applicantName || "-"}</dd></div>
+              <div><dt>类别</dt><dd>{data.categoryName || "-"}</dd></div>
+              <div><dt>金额</dt><dd>{currency(data.amountTotal)}</dd></div>
+              <div><dt>日期</dt><dd>{shortDate(data.expenseDate)}</dd></div>
+              <div><dt>发票状态</dt><dd>{data.invoiceAttachmentStatus || "-"}</dd></div>
+              <div><dt>是否有发票</dt><dd>{data.hasInvoice ? "有" : "无"}</dd></div>
+              <div><dt>发票是否必传</dt><dd>{data.invoiceRequiredSnapshot ? "是" : "否"}</dd></div>
+              <div><dt>超额金额</dt><dd>{currency(data.overLimitAmount)}</dd></div>
+            </dl>
 
-          <Card className="doodle-surface doodle-detail-card">
-            <CardHeader className="doodle-card-header doodle-detail-card__header">
-              <CardTitle>异常与规则提示</CardTitle>
-            </CardHeader>
-            <CardContent className="doodle-detail-card__content flex flex-wrap gap-3">
-              {data.anomalies?.length ? (
-                data.anomalies.map((item: any, index: number) => (
-                  <Badge key={item.id || `${item.type}-${index}`} variant="warning">
-                    {item.anomalyMessage || item.message}
-                  </Badge>
-                ))
+            <div className="single-expense-detailPage__inlineBlock">
+              <strong>异常标签</strong>
+              <div className="single-expense-detailPage__badgeRow">
+                {data.anomalies?.length ? (
+                  data.anomalies.map((item: any, index: number) => (
+                    <Badge key={item.id || `${item.type}-${index}`} variant="warning">
+                      {item.anomalyMessage || item.message}
+                    </Badge>
+                  ))
+                ) : (
+                  <Badge variant="success">无异常</Badge>
+                )}
+              </div>
+            </div>
+
+            <div className="single-expense-detailPage__inlineBlock">
+              <strong>扩展信息</strong>
+              {detailEntries.length ? (
+                <dl className="single-expense-detailPage__fieldList">
+                  {detailEntries.map(([key, value]) => (
+                    <div key={key}><dt>{key}</dt><dd>{String(value ?? "-")}</dd></div>
+                  ))}
+                </dl>
               ) : (
-                <Badge variant="success">无异常</Badge>
+                <p className="text-sm text-slate-500">暂无扩展信息。</p>
               )}
-            </CardContent>
-          </Card>
+            </div>
 
-          <Card className="doodle-surface doodle-detail-card">
-            <CardHeader className="doodle-card-header doodle-detail-card__header">
-              <CardTitle>扩展信息</CardTitle>
-            </CardHeader>
-            <CardContent className="doodle-detail-card__content doodle-detail-card__fields grid gap-3 text-sm text-slate-700">
-              {detailEntries.length ? detailEntries.map(([key, value]) => <p key={key}>{key}：{String(value ?? "-")}</p>) : <p>无扩展信息</p>}
-            </CardContent>
-          </Card>
-
-          <Card className="doodle-surface doodle-detail-card">
-            <CardHeader className="doodle-card-header doodle-detail-card__header">
-              <CardTitle>附件与发票</CardTitle>
-            </CardHeader>
-            <CardContent className="doodle-detail-card__content doodle-detail-card__attachments grid gap-6">
-              <section className="doodle-attachment-section">
-                <div className="doodle-attachment-section__header">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="warning">发票附件</Badge>
-                    <Badge variant="default">{invoiceAttachments.length} 份</Badge>
-                  </div>
-                  <p className="text-sm text-slate-500">优先核对票面信息，图片与 PDF 支持预览，其他文件可直接下载。</p>
-                </div>
-                {invoiceAttachments.length ? (
-                  <div className="doodle-attachment-list">
-                    {invoiceAttachments.map((item) => (
-                      <AttachmentActionRow
-                        key={item.id}
-                        item={item}
-                        busy={busyAttachmentId === item.id}
-                        onPreview={(selected) => handleAttachmentAction(selected, true)}
-                        onDownload={(selected) => handleAttachmentAction(selected, false)}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="doodle-attachment-empty">
-                    <p className="text-sm font-semibold text-slate-900">当前没有单独标记为发票的附件</p>
-                    <p className="text-sm text-slate-500">如果这笔报销声明了有发票，但这里仍为空，需要回到记录核对上传绑定情况。</p>
-                  </div>
-                )}
-              </section>
-
-              <section className="doodle-attachment-section">
-                <div className="doodle-attachment-section__header">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="success">其他附件</Badge>
-                    <Badge variant="default">{otherAttachments.length} 份</Badge>
-                  </div>
-                  <p className="text-sm text-slate-500">行程单、说明图或补充材料会出现在这里，支持按类型预览或下载。</p>
-                </div>
-                {otherAttachments.length ? (
-                  <div className="doodle-attachment-list">
-                    {otherAttachments.map((item) => (
-                      <AttachmentActionRow
-                        key={item.id}
-                        item={item}
-                        busy={busyAttachmentId === item.id}
-                        onPreview={(selected) => handleAttachmentAction(selected, true)}
-                        onDownload={(selected) => handleAttachmentAction(selected, false)}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="doodle-attachment-empty">
-                    <p className="text-sm font-semibold text-slate-900">当前没有其它附件</p>
-                    <p className="text-sm text-slate-500">这笔报销目前只提交了发票，暂无额外补充材料。</p>
-                  </div>
-                )}
-              </section>
-            </CardContent>
-          </Card>
-        </div>
+            <div className="single-expense-detailPage__inlineBlock">
+              <div className="single-expense-detailPage__sectionHead">
+                <strong>附件</strong>
+                <span>{attachments.length} 个</span>
+              </div>
+              {attachments.length ? (
+                <ul className="single-expense-detailPage__attachmentList">
+                  {attachments.map((item) => {
+                    const previewable = isPreviewableImage(item.fileType, item.fileName) || isPdf(item.fileType, item.fileName);
+                    const busy = busyAttachmentId === item.id;
+                    return (
+                      <li key={item.id} className="single-expense-detailPage__attachmentItem">
+                        <div className="single-expense-detailPage__attachmentInfo">
+                          <div className="single-expense-detailPage__attachmentNameRow">
+                            <span>{item.fileName}</span>
+                            <div className="single-expense-detailPage__badgeRow">
+                              {item.isInvoiceFile ? <Badge variant="warning">发票</Badge> : null}
+                              <Badge variant="default">{getAttachmentKindLabel(item.fileType, item.fileName)}</Badge>
+                            </div>
+                          </div>
+                          <p>{item.fileType || "未知类型"} · {formatFileSize(item.fileSize)}</p>
+                        </div>
+                        <div className="single-expense-detailPage__attachmentActions">
+                          {previewable ? <Button variant="outline" disabled={busy} onClick={() => handleAttachmentPreview(item)}>{busy ? "打开中..." : "预览"}</Button> : null}
+                          <Button variant="primary" disabled={busy} onClick={() => handleAttachmentDownload(item)}>{busy ? "处理中..." : "下载"}</Button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <p className="text-sm text-slate-500">当前没有附件。</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </AppShell>
   );
